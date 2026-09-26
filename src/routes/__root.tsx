@@ -96,12 +96,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Northstar Traveling Agency" },
       { name: "description", content: "Northstar Traveling Agency — verified employment opportunities worldwide." },
-      { name: "author", content: "Lovable" },
       { property: "og:title", content: "Northstar Traveling Agency" },
       { property: "og:description", content: "Explore verified employment opportunities with Northstar Traveling Agency." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -114,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/northstar-favicon.svg", type: "image/svg+xml" },
     ],
   }),
   shellComponent: RootShell,
