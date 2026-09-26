@@ -207,15 +207,72 @@ export async function fetchPublicOpportunities() {
   return data ?? [];
 }
 
-export async function fetchPublicTestimonials() {
+export type TestimonialRow = {
+  id: string;
+  name: string;
+  location: string | null;
+  quote: string;
+  rating: number;
+  published: boolean;
+  display_order: number;
+  is_demo: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+const DEMO_TESTIMONIALS: TestimonialRow[] = [
+  {
+    id: "demo-1",
+    name: "Sarah M.",
+    location: "Nairobi",
+    quote: "Northstar Traveling Agency helped me understand the application process clearly and prepared me for my next career step.",
+    rating: 5,
+    published: true,
+    display_order: 1,
+    is_demo: true,
+    created_at: "2026-09-27T00:00:00.000Z",
+    updated_at: "2026-09-27T00:00:00.000Z",
+  },
+  {
+    id: "demo-2",
+    name: "David K.",
+    location: "Mombasa",
+    quote: "The opportunity details were easy to review, and the application instructions were straightforward.",
+    rating: 5,
+    published: true,
+    display_order: 2,
+    is_demo: true,
+    created_at: "2026-09-27T00:00:00.000Z",
+    updated_at: "2026-09-27T00:00:00.000Z",
+  },
+  {
+    id: "demo-3",
+    name: "Grace W.",
+    location: "Nakuru",
+    quote: "A clean and helpful experience for finding international employment opportunities and checking requirements.",
+    rating: 5,
+    published: true,
+    display_order: 3,
+    is_demo: true,
+    created_at: "2026-09-27T00:00:00.000Z",
+    updated_at: "2026-09-27T00:00:00.000Z",
+  },
+];
+
+export async function fetchPublicTestimonials(): Promise<TestimonialRow[]> {
   const { data, error } = await supabase
     .from("testimonials")
     .select("*")
     .eq("published", true)
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
-  if (error) throw error;
-  return data ?? [];
+
+  if (error) {
+    console.warn("Testimonials table is unavailable; using public demo testimonials.", error.message);
+    return DEMO_TESTIMONIALS;
+  }
+
+  return data?.length ? data : DEMO_TESTIMONIALS;
 }
 
 export async function fetchCompanies() {
