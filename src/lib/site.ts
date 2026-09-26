@@ -207,6 +207,17 @@ export async function fetchPublicOpportunities() {
   return data ?? [];
 }
 
+export async function fetchPublicTestimonials() {
+  const { data, error } = await supabase
+    .from("testimonials")
+    .select("*")
+    .eq("published", true)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
 export async function fetchCompanies() {
   const { data, error } = await supabase.from("companies").select("*").order("name");
   if (error) throw error;
