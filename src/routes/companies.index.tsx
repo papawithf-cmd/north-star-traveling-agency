@@ -9,12 +9,12 @@ import { fetchCompanies, fetchPublicOpportunities } from "@/lib/site";
 export const Route = createFileRoute("/companies/")({
   head: () => ({
     meta: [
-      { title: "Employers & Companies — SkyBridge Careers" },
+      { title: "Employers & Companies — Northstar Traveling Agency" },
       {
         name: "description",
-        content: "Browse verified employers hiring through SkyBridge Careers and see their open vacancies.",
+        content: "Browse verified employers hiring through Northstar Traveling Agency and see their open vacancies.",
       },
-      { property: "og:title", content: "Employers & Companies — SkyBridge Careers" },
+      { property: "og:title", content: "Employers & Companies — Northstar Traveling Agency" },
       { property: "og:description", content: "Verified employers and their current openings." },
     ],
   }),
