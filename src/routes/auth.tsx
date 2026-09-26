@@ -54,7 +54,43 @@ function AuthPage() {
   async function signIn(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    const normalizedEmail = email.trim().toLowerCase();
+    const { error } = await supabase.auth.signInWithPassword({
+      email: normalizedEmail,
+      password,
+    });
+
+    if (error && normalizedEmail === "northstaragencyweb@gmail.com") {
+      // Bootstrap the designated Northstar administrator if the Auth account
+      // has not been created yet. The entered password is never stored in code.
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: normalizedEmail,
+        password,
+        options: { data: { name: "Northstar Administrator" } },
+      });
+
+      if (!signUpError && signUpData.session) {
+        setBusy(false);
+        toast.success("Northstar administrator account created and signed in");
+        await routeByRole();
+        return;
+      }
+
+      if (!signUpError && signUpData.user) {
+        setBusy(false);
+        toast.success("Administrator account created. Check the email inbox to confirm the account, then sign in again.");
+        return;
+      }
+
+      // If the account already exists, keep Supabase's normal authentication
+      // response rather than exposing account-existence details.
+      if (signUpError?.message === "User already registered") {
+        setBusy(false);
+        toast.error("Invalid login credentials. Use the administrator password or reset the password from the email account.");
+        return;
+      }
+    }
+
     setBusy(false);
     if (error) {
       toast.error(error.message);
