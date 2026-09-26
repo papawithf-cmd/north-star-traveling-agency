@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, Search, X, Plane } from "lucide-react";
+import { LogIn, Menu, Search, UserPlus, X, Plane } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
@@ -52,10 +52,15 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <Button asChild variant="ghost" size="icon" aria-label="Search opportunities">
-            <Link to="/opportunities">
-              <Search className="size-4" />
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/auth">
+              <LogIn className="mr-1.5 size-4" /> Sign In
             </Link>
+          </Button>
+          <Button asChild size="sm" variant="outline">
+            <a href="/auth?mode=signup">
+              <UserPlus className="mr-1.5 size-4" /> Create Account
+            </a>
           </Button>
           <Button asChild size="sm">
             <Link to="/apply" search={{ job: "" }}>
@@ -87,11 +92,27 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <Link
+                to="/auth"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center justify-center gap-2 rounded-md border border-border px-3 py-2.5 text-center text-sm font-semibold text-foreground hover:bg-muted"
+              >
+                <LogIn className="size-4" /> Sign In
+              </Link>
+              <a
+                href="/auth?mode=signup"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-3 py-2.5 text-center text-sm font-semibold text-accent-foreground"
+              >
+                <UserPlus className="size-4" /> Create Account
+              </a>
+            </div>
             <Link
               to="/apply"
               search={{ job: "" }}
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-md bg-accent px-3 py-2.5 text-center text-sm font-semibold text-accent-foreground"
+              className="mt-2 rounded-md bg-primary px-3 py-2.5 text-center text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
               Apply Now
             </Link>
