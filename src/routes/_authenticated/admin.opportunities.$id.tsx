@@ -27,6 +27,7 @@ import {
   fetchCompanies,
   formatDate,
   mediaUrl,
+  imageUrlProblem,
   slugify,
 } from "@/lib/site";
 import { ImageUploader } from "@/components/admin/ImageUploader";
@@ -248,6 +249,8 @@ function OpportunityEditor() {
       if (action.type === "add") {
         const value = action.path?.trim();
         if (!value) throw new Error("Choose a file or enter an image URL");
+        const problem = imageUrlProblem(value.startsWith("opportunities/") ? "" : value);
+        if (problem) throw new Error(problem);
         if (images.length >= 6) throw new Error("Maximum of 6 images");
         const { error } = await supabase.from("opportunity_images").insert({
           opportunity_id: recordId!,
