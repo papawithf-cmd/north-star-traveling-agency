@@ -133,7 +133,10 @@ export function mediaUrl(path?: string | null) {
 export function categoryImage(slug?: string | null, custom?: string | null) {
   const resolved = mediaUrl(custom);
   if (resolved) return resolved;
-  if (slug && fallbackImages[slug]) return fallbackImages[slug]!;
+  if (slug) {
+    const match = fallbackImages[normalizeSlug(slug)];
+    if (match) return match;
+  }
   // Unknown categories get a neutral default instead of an unrelated photo.
   return gallery[0]!;
 }
