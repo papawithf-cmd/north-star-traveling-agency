@@ -9,13 +9,13 @@ import { categoryImage, fetchCategories, fetchPublicOpportunities } from "@/lib/
 export const Route = createFileRoute("/categories")({
   head: () => ({
     meta: [
-      { title: "Job Categories — SkyBridge Careers" },
+      { title: "Job Categories — Northstar Traveling Agency" },
       {
         name: "description",
         content:
           "Explore job categories including cabin crew, airmen, ground crew, caregivers, security, private courier and delivery roles.",
       },
-      { property: "og:title", content: "Job Categories — SkyBridge Careers" },
+      { property: "og:title", content: "Job Categories — Northstar Traveling Agency" },
       { property: "og:description", content: "Browse verified opportunities by professional field." },
     ],
   }),
