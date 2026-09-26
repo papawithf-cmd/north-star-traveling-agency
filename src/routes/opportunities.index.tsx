@@ -95,8 +95,8 @@ function OpportunitiesPage() {
           loading="lazy"
           className="absolute inset-0 size-full object-cover object-[68%_center] sm:object-center"
         />
-        <div className="absolute inset-0 bg-navy/75" />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/85 via-navy/30 to-navy/90" />
+        <div className="absolute inset-0 bg-navy/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/40 to-navy/85" />
         <div className="relative container-page py-16 text-center sm:py-24">
           <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">
             Opportunities
