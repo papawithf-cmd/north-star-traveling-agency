@@ -576,6 +576,45 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonials: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_demo: boolean
+          location: string | null
+          name: string
+          published: boolean
+          quote: string
+          rating: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_demo?: boolean
+          location?: string | null
+          name: string
+          published?: boolean
+          quote: string
+          rating?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_demo?: boolean
+          location?: string | null
+          name?: string
+          published?: boolean
+          quote?: string
+          rating?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           about_text: string | null
