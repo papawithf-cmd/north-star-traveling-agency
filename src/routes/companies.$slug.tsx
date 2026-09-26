@@ -10,8 +10,8 @@ import { fetchCompanies, fetchPublicOpportunities } from "@/lib/site";
 export const Route = createFileRoute("/companies/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.slug.replace(/-/g, " ")} — Employer profile | SkyBridge Careers` },
-      { name: "description", content: "Employer profile and current vacancies on SkyBridge Careers." },
+      { title: `${params.slug.replace(/-/g, " ")} — Employer profile | Northstar Traveling Agency` },
+      { name: "description", content: "Employer profile and current vacancies on Northstar Traveling Agency." },
       { property: "og:title", content: `${params.slug.replace(/-/g, " ")} — Employer profile` },
       { property: "og:description", content: "See open roles from this verified employer." },
     ],
