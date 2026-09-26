@@ -16,6 +16,7 @@ import { Route as ApplyRouteImport } from './routes/apply'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as MatchRouteImport } from './routes/match'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -71,6 +72,11 @@ const CategoriesRoute = CategoriesRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MatchRoute = MatchRouteImport.update({
+  id: '/match',
+  path: '/match',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -202,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
+  '/match': typeof MatchRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
+  '/match': typeof MatchRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -262,6 +270,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
+  '/match': typeof MatchRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -294,6 +303,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/categories'
     | '/contact'
+    | '/match'
     | '/privacy'
     | '/terms'
     | '/admin'
@@ -324,6 +334,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/categories'
     | '/contact'
+    | '/match'
     | '/privacy'
     | '/terms'
     | '/category/$slug'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/categories'
     | '/contact'
+    | '/match'
     | '/privacy'
     | '/terms'
     | '/_authenticated/admin'
@@ -385,6 +397,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CategoriesRoute: typeof CategoriesRoute
   ContactRoute: typeof ContactRoute
+  MatchRoute: typeof MatchRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   CategorySlugRoute: typeof CategorySlugRoute
@@ -444,6 +457,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/match': {
+      id: '/match'
+      path: '/match'
+      fullPath: '/match'
+      preLoaderRoute: typeof MatchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -670,6 +690,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CategoriesRoute: CategoriesRoute,
   ContactRoute: ContactRoute,
+  MatchRoute: MatchRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   CategorySlugRoute: CategorySlugRoute,
