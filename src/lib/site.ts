@@ -9,6 +9,22 @@ import courier from "@/assets/cat-courier.jpg";
 import delivery from "@/assets/cat-delivery.jpg";
 import drivers from "@/assets/cat-drivers.jpg";
 import restaurant from "@/assets/cat-restaurant.jpg";
+import nursing from "@/assets/cat-nursing.jpg";
+import nanny from "@/assets/cat-nanny.jpg";
+import generalLabour from "@/assets/cat-general-labour.jpg";
+import agriculture from "@/assets/cat-agriculture.jpg";
+import barista from "@/assets/cat-barista.jpg";
+import beautySalon from "@/assets/cat-beauty-salon.jpg";
+import construction from "@/assets/cat-construction.jpg";
+import customerService from "@/assets/cat-customer-service.jpg";
+import electricians from "@/assets/cat-electricians.jpg";
+import engineering from "@/assets/cat-engineering.jpg";
+import factory from "@/assets/cat-factory.jpg";
+import hospitalityHotels from "@/assets/cat-hospitality-hotels.jpg";
+import housekeeping from "@/assets/cat-housekeeping.jpg";
+import logistics from "@/assets/cat-logistics.jpg";
+import plumbers from "@/assets/cat-plumbers.jpg";
+import warehouse from "@/assets/cat-warehouse.jpg";
 
 export const PUBLIC_STATUSES = ["published", "approved", "featured", "urgent"];
 
@@ -49,23 +65,63 @@ const fallbackImages: Record<string, string> = {
   chauffeur: drivers,
   "truck-drivers": drivers,
   "restaurant-food-shop": restaurant,
+  "restaurant-food-service": restaurant,
   restaurant: restaurant,
   "restaurant-food": restaurant,
   "food-shop": restaurant,
   hospitality: restaurant,
+  "nursing-healthcare": nursing,
+  nursing: nursing,
+  healthcare: nursing,
+  "nanny-childcare": nanny,
+  nanny: nanny,
+  childcare: nanny,
+  "general-labour": generalLabour,
+  "general-labor": generalLabour,
+  labour: generalLabour,
+  "agriculture-farming": agriculture,
+  agriculture: agriculture,
+  farming: agriculture,
+  "barista-coffee-shop": barista,
+  barista: barista,
+  "coffee-shop": barista,
+  "beauty-salon": beautySalon,
+  beauty: beautySalon,
+  salon: beautySalon,
+  "construction-skilled-trades": construction,
+  construction: construction,
+  "skilled-trades": construction,
+  "customer-service": customerService,
+  "electricians-technicians": electricians,
+  electricians: electricians,
+  technicians: electricians,
+  engineering: engineering,
+  "factory-manufacturing": factory,
+  factory: factory,
+  manufacturing: factory,
+  "hospital-hotels": hospitalityHotels,
+  hotels: hospitalityHotels,
+  "housekeeping-cleaning": housekeeping,
+  housekeeping: housekeeping,
+  cleaning: housekeeping,
+  "logistics-supply-chain": logistics,
+  logistics: logistics,
+  "supply-chain": logistics,
+  plumbers: plumbers,
+  plumbing: plumbers,
+  warehouse: warehouse,
 };
 
-const gallery = [
-  airHostess,
-  airmen,
-  groundCrew,
-  caregivers,
-  security,
-  courier,
-  delivery,
-  drivers,
-  restaurant,
-];
+const gallery = [airHostess];
+
+/** Normalize a category slug so odd spacing/casing never breaks image lookup. */
+function normalizeSlug(slug: string) {
+  return slug
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 /** Resolve a stored image value (storage path or external URL) to a displayable URL. */
 export function mediaUrl(path?: string | null) {
