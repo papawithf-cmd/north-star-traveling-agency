@@ -9,12 +9,12 @@ import { fetchCategories, fetchPublicOpportunities } from "@/lib/site";
 export const Route = createFileRoute("/category/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.slug.replace(/-/g, " ")} jobs — SkyBridge Careers` },
+      { title: `${params.slug.replace(/-/g, " ")} jobs — Northstar Traveling Agency` },
       {
         name: "description",
         content: `Current verified vacancies in the ${params.slug.replace(/-/g, " ")} category.`,
       },
-      { property: "og:title", content: `${params.slug.replace(/-/g, " ")} jobs — SkyBridge Careers` },
+      { property: "og:title", content: `${params.slug.replace(/-/g, " ")} jobs — Northstar Traveling Agency` },
       { property: "og:description", content: "Verified vacancies updated regularly." },
     ],
   }),
