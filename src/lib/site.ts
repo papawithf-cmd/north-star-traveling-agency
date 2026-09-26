@@ -78,10 +78,8 @@ export function categoryImage(slug?: string | null, custom?: string | null) {
   const resolved = mediaUrl(custom);
   if (resolved) return resolved;
   if (slug && fallbackImages[slug]) return fallbackImages[slug]!;
-  if (!slug) return gallery[0]!;
-  let sum = 0;
-  for (const ch of slug) sum += ch.charCodeAt(0);
-  return gallery[sum % gallery.length]!;
+  // Unknown categories get a neutral default instead of an unrelated photo.
+  return gallery[0]!;
 }
 
 export function formatDate(value?: string | null) {
