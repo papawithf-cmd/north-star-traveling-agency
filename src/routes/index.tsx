@@ -247,12 +247,15 @@ function Home() {
               search={{ location: country.query }}
               className="group flex min-h-28 flex-col justify-between rounded-lg border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-secondary hover:shadow-card"
             >
-              <span
-                className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-2xl leading-none"
-                aria-label={`${country.label} flag`}
-                role="img"
-              >
-                {country.flag}
+              <span className="flex size-11 items-center justify-center overflow-hidden rounded-full bg-primary/10" aria-hidden="true">
+                <img
+                  src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                  alt=""
+                  width={40}
+                  height={28}
+                  loading="lazy"
+                  className="h-7 w-10 object-cover"
+                />
               </span>
               <span className="mt-4 flex items-end justify-between gap-2">
                 <span className="text-sm font-semibold leading-tight text-foreground">{country.label}</span>
