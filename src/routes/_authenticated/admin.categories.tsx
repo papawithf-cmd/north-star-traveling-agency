@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchCategories, slugify } from "@/lib/site";
+import { fetchCategories, imageUrlProblem, slugify } from "@/lib/site";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 
 export const Route = createFileRoute("/_authenticated/admin/categories")({
@@ -45,6 +45,8 @@ function AdminCategories() {
 
   const save = useMutation({
     mutationFn: async (value: Form) => {
+      const problem = value.image.startsWith("categories/") ? null : imageUrlProblem(value.image);
+      if (problem) throw new Error(problem);
       const payload = {
         name: value.name,
         slug: value.slug || slugify(value.name),

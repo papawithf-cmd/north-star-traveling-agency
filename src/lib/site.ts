@@ -127,7 +127,23 @@ function normalizeSlug(slug: string) {
 export function mediaUrl(path?: string | null) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path) || path.startsWith("/") || path.startsWith("data:")) return path;
-  return `/api/public/media/${path}`;
+  const base = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
+  if (!base) return `/api/public/media/${path}`;
+  return `${base}/storage/v1/object/public/site-images/${path.replace(/^\/+/, "")}`;
+}
+
+/**
+ * Returns an error message when a pasted link is a share/viewer page instead of a
+ * direct image file (e.g. share.google, Google Photos/Drive links), otherwise null.
+ */
+export function imageUrlProblem(url: string) {
+  const v = url.trim();
+  if (!v) return null;
+  if (!/^https?:\/\//i.test(v)) return "Image link must start with https://";
+  if (/(share\.google|photos\.app\.goo\.gl|photos\.google\.com|drive\.google\.com\/(file|open)|goo\.gl\/)/i.test(v)) {
+    return "This is a share page link, not an image file. Please use Upload image instead.";
+  }
+  return null;
 }
 
 export function categoryImage(slug?: string | null, custom?: string | null) {

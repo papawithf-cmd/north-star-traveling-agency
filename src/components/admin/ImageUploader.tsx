@@ -21,7 +21,12 @@ export async function uploadSiteImage(file: File, folder: string) {
   const { error } = await supabase.storage
     .from("site-images")
     .upload(path, file, { contentType: file.type, upsert: false });
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (/bucket not found/i.test(error.message)) {
+      throw new Error("Image storage is not set up yet. Please run the storage setup once, then try again.");
+    }
+    throw new Error(`Upload failed: ${error.message}`);
+  }
   return path;
 }
 
@@ -94,7 +99,7 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
       <input
         ref={inputRef}
         type="file"
-        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+        accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
         className="hidden"
         onChange={(e) => pick(e.target.files?.[0])}
       />
