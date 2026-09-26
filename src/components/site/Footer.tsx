@@ -12,7 +12,7 @@ export function Footer() {
     <footer className="bg-navy text-navy-foreground">
       <div className="container-page grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.9fr_1.1fr] lg:py-20">
         <div className="max-w-sm">
-          <h3 className="font-display text-xl font-bold tracking-normal">{settings?.site_name ?? "SkyBridge Careers"}</h3>
+          <h3 className="font-display text-xl font-bold tracking-normal">{settings?.site_name ?? "Northstar Traveling Agency"}</h3>
           <p className="mt-4 text-sm leading-relaxed text-navy-foreground/70">
             {settings?.tagline ?? "Verified employment opportunities worldwide."}
           </p>
