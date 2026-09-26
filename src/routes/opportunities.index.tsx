@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
-import { PageHeader, SiteLayout } from "@/components/site/SiteLayout";
+import { SiteLayout } from "@/components/site/SiteLayout";
 import { OpportunityCard } from "@/components/site/OpportunityCard";
 import { EmptyState } from "@/routes/index";
 import { Button } from "@/components/ui/button";
@@ -84,11 +84,25 @@ function OpportunitiesPage() {
 
   return (
     <SiteLayout>
-      <PageHeader
-        eyebrow="Opportunities"
-        title="Browse all opportunities"
-        subtitle="Filter verified vacancies by keyword, location, category and employment type."
-      />
+      <header className="border-b border-border bg-surface">
+        <div className="container-page py-16 text-center sm:py-20">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-secondary">
+            Opportunities
+          </p>
+          <h1 className="mx-auto mt-4 max-w-3xl font-serif text-4xl font-light leading-tight text-foreground sm:text-5xl">
+            Career Opportunities
+          </h1>
+          <div className="mt-6 flex items-center justify-center gap-3" aria-hidden="true">
+            <span className="h-px w-12 bg-border" />
+            <span className="size-1.5 rotate-45 bg-accent" />
+            <span className="h-px w-12 bg-border" />
+          </div>
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Every verified vacancy from Northstar Traveling Agency Kenya Ltd — filter by keyword,
+            location, category and employment type.
+          </p>
+        </div>
+      </header>
 
       <div className="container-page grid gap-8 py-10 lg:grid-cols-[280px_1fr]">
         <aside className="h-fit rounded-xl border border-border bg-card p-5 shadow-card lg:sticky lg:top-24">
