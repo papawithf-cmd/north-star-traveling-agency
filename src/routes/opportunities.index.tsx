@@ -43,7 +43,7 @@ export const Route = createFileRoute("/opportunities/")({
         content:
           "Search and filter verified job opportunities by title, keyword, company, location, category, employment type and duration.",
       },
-      { property: "og:title", content: "Browse Opportunities — SkyBridge Careers" },
+      { property: "og:title", content: "Browse Opportunities — Northstar Traveling Agency" },
       { property: "og:description", content: "Search verified vacancies across aviation, care, security and logistics." },
     ],
   }),
