@@ -191,3 +191,14 @@
 @utility text-balance-tight {
   text-wrap: balance;
 }
+
+/* Keep third-party editor branding out of the public site. */
+#lovable-badge,
+.lovable-badge,
+[data-lovable-badge],
+[id*="lovable-badge"],
+[class*="lovable-badge"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
