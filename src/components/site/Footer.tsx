@@ -66,7 +66,7 @@ export function Footer() {
 
       <div className="border-t border-navy-foreground/15">
         <div className="container-page flex flex-col items-center justify-between gap-4 py-6 text-center text-xs text-navy-foreground/60 sm:flex-row sm:text-left">
-          <p>© {new Date().getFullYear()} {settings?.site_name ?? "SkyBridge Careers"}. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {settings?.site_name ?? "Northstar Traveling Agency"}. All rights reserved.</p>
           <div className="flex gap-5">
             <Link to="/privacy" className="hover:text-accent">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-accent">Terms &amp; Conditions</Link>
