@@ -16,12 +16,12 @@ import { fetchSettings } from "@/lib/site";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Us — SkyBridge Careers" },
+      { title: "Contact Us — Northstar Traveling Agency" },
       {
         name: "description",
-        content: "Get in touch with the SkyBridge Careers team about vacancies, applications or employer listings.",
+        content: "Get in touch with the Northstar Traveling Agency team about vacancies, applications or employer listings.",
       },
-      { property: "og:title", content: "Contact SkyBridge Careers" },
+      { property: "og:title", content: "Contact Northstar Traveling Agency" },
       { property: "og:description", content: "Send us a message about vacancies or employer listings." },
     ],
   }),
