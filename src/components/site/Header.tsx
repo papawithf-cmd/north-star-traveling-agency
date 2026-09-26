@@ -62,11 +62,6 @@ export function Header() {
               Apply Now
             </Link>
           </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link to="/auth">
-              <Shield className="mr-1.5 size-4" /> Admin Login
-            </Link>
-          </Button>
         </div>
 
         <button
@@ -99,13 +94,6 @@ export function Header() {
               className="mt-2 rounded-md bg-accent px-3 py-2.5 text-center text-sm font-semibold text-accent-foreground"
             >
               Apply Now
-            </Link>
-            <Link
-              to="/auth"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-md bg-primary px-3 py-2.5 text-center text-sm font-semibold text-primary-foreground"
-            >
-              Admin Login
             </Link>
           </nav>
         </div>
