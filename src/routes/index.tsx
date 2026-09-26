@@ -9,9 +9,11 @@ import {
   FileSearch,
   Globe2,
   MapPin,
+  Quote,
   Search,
   Send,
   Sparkles,
+  Star,
   Tags,
 } from "lucide-react";
 
@@ -27,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { categoryImage, fetchCategories, fetchPublicOpportunities, formatDate } from "@/lib/site";
+import { categoryImage, fetchCategories, fetchPublicOpportunities, fetchPublicTestimonials, formatDate } from "@/lib/site";
 import heroImage from "@/assets/northstar-home-hero.jpg";
 import careerBanner from "@/assets/northstar-career-banner.jpg";
 
@@ -89,6 +91,7 @@ function Home() {
 
   const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
   const { data: jobs = [] } = useQuery({ queryKey: ["opportunities"], queryFn: fetchPublicOpportunities });
+  const { data: testimonials = [] } = useQuery({ queryKey: ["testimonials"], queryFn: fetchPublicTestimonials });
 
   const activeCategories = categories.filter((item) => item.active);
   const featured = (jobs.filter((job) => job.featured).length
@@ -314,6 +317,59 @@ function Home() {
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="border-y border-border bg-surface py-20 sm:py-24" aria-labelledby="testimonials-title">
+        <div className="container-page">
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-normal text-secondary">Customer stories</p>
+            <h2 id="testimonials-title" className="mt-4 font-serif text-4xl font-light leading-tight sm:text-5xl">
+              What Our Clients Say
+            </h2>
+            <div className="mt-5 flex items-center justify-center gap-3" aria-hidden="true">
+              <span className="h-px w-12 bg-border" />
+              <span className="size-1.5 rotate-45 bg-accent" />
+              <span className="h-px w-12 bg-border" />
+            </div>
+            <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Read feedback shared by clients about their Northstar Traveling Agency experience.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {testimonials.slice(0, 3).map((testimonial) => (
+              <article
+                key={testimonial.id}
+                className="flex h-full flex-col rounded-lg border border-border bg-card p-7 shadow-card"
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <Quote className="size-8 text-accent" aria-hidden="true" />
+                  {testimonial.is_demo ? (
+                    <Badge className="bg-muted text-foreground">Demo</Badge>
+                  ) : null}
+                </div>
+                <div className="mt-4 flex gap-1" aria-label={`${testimonial.rating} out of 5 stars`}>
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <Star
+                      key={index}
+                      className={`size-4 ${index < testimonial.rating ? "fill-current text-accent" : "text-muted-foreground/30"}`}
+                      aria-hidden="true"
+                    />
+                  ))}
+                </div>
+                <blockquote className="mt-5 flex-1 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  “{testimonial.quote}”
+                </blockquote>
+                <footer className="mt-6 border-t border-border pt-5">
+                  <p className="font-semibold text-foreground">{testimonial.name}</p>
+                  {testimonial.location ? (
+                    <p className="mt-1 text-sm text-muted-foreground">{testimonial.location}</p>
+                  ) : null}
+                </footer>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section className="relative min-h-[430px] overflow-hidden bg-navy text-navy-foreground">
