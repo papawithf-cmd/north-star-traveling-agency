@@ -9,18 +9,18 @@ export function Footer() {
   const { data: categories } = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
 
   return (
-    <footer className="mt-20 bg-navy text-navy-foreground">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <h3 className="font-display text-lg font-bold">{settings?.site_name ?? "SkyBridge Careers"}</h3>
-          <p className="mt-3 text-sm text-navy-foreground/70">
+    <footer className="bg-navy text-navy-foreground">
+      <div className="container-page grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.9fr_1.1fr] lg:py-20">
+        <div className="max-w-sm">
+          <h3 className="font-display text-xl font-bold tracking-normal">{settings?.site_name ?? "SkyBridge Careers"}</h3>
+          <p className="mt-4 text-sm leading-relaxed text-navy-foreground/70">
             {settings?.tagline ?? "Verified employment opportunities worldwide."}
           </p>
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold uppercase tracking-wider text-accent">Explore</h4>
-          <ul className="mt-4 space-y-2 text-sm text-navy-foreground/75">
+          <h4 className="text-sm font-semibold uppercase tracking-normal text-accent">Explore</h4>
+          <ul className="mt-5 space-y-3 text-sm text-navy-foreground/75">
             <li><Link to="/opportunities" className="hover:text-accent">All Opportunities</Link></li>
             <li><Link to="/categories" className="hover:text-accent">Job Categories</Link></li>
             <li><Link to="/companies" className="hover:text-accent">Companies</Link></li>
@@ -30,8 +30,8 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold uppercase tracking-wider text-accent">Categories</h4>
-          <ul className="mt-4 space-y-2 text-sm text-navy-foreground/75">
+          <h4 className="text-sm font-semibold uppercase tracking-normal text-accent">Categories</h4>
+          <ul className="mt-5 space-y-3 text-sm text-navy-foreground/75">
             {(categories ?? []).slice(0, 6).map((c) => (
               <li key={c.id}>
                 <Link to="/category/$slug" params={{ slug: c.slug }} className="hover:text-accent">
@@ -43,8 +43,8 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold uppercase tracking-wider text-accent">Get in touch</h4>
-          <ul className="mt-4 space-y-3 text-sm text-navy-foreground/75">
+          <h4 className="text-sm font-semibold uppercase tracking-normal text-accent">Get in touch</h4>
+          <ul className="mt-5 space-y-4 text-sm leading-relaxed text-navy-foreground/75">
             {settings?.phone ? (
               <li className="flex items-start gap-2"><Phone className="mt-0.5 size-4 shrink-0" />{settings.phone}</li>
             ) : null}
@@ -64,8 +64,8 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
-        <div className="container-page flex flex-col items-center justify-between gap-3 py-5 text-xs text-navy-foreground/60 sm:flex-row">
+      <div className="border-t border-navy-foreground/15">
+        <div className="container-page flex flex-col items-center justify-between gap-4 py-6 text-center text-xs text-navy-foreground/60 sm:flex-row sm:text-left">
           <p>© {new Date().getFullYear()} {settings?.site_name ?? "SkyBridge Careers"}. All rights reserved.</p>
           <div className="flex gap-5">
             <Link to="/privacy" className="hover:text-accent">Privacy Policy</Link>
