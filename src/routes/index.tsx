@@ -34,13 +34,13 @@ import careerBanner from "@/assets/northstar-career-banner.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Northstar Traveling Agency Kenya Ltd — International Career Opportunities" },
+      { title: "Northstar Traveling Agency — International Career Opportunities" },
       {
         name: "description",
         content:
-          "Explore international career opportunities by country, category and location with Northstar Traveling Agency Kenya Ltd.",
+          "Explore international career opportunities by country, category and location with Northstar Traveling Agency.",
       },
-      { property: "og:title", content: "Northstar Traveling Agency Kenya Ltd — International Opportunities" },
+      { property: "og:title", content: "Northstar Traveling Agency — International Opportunities" },
       {
         property: "og:description",
         content: "Discover international opportunities and take the next step in your professional future.",
@@ -134,7 +134,7 @@ function Home() {
               Discover Your Next Opportunity
             </h1>
             <p className="mt-4 font-serif text-2xl font-light uppercase leading-tight tracking-normal text-accent sm:text-3xl">
-              Build Your Future With NorthStar
+              Build Your Future With Northstar Traveling Agency
             </p>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-navy-foreground/85 sm:text-lg">
               Explore international career opportunities, discover destinations and take the next step
@@ -202,7 +202,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="container-page py-14 sm:py-16" aria-label="NorthStar opportunity statistics">
+      <section className="container-page py-14 sm:py-16" aria-label="Northstar Traveling Agency opportunity statistics">
         <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border lg:grid-cols-4">
           <Stat icon={<BriefcaseBusiness className="size-5" />} label="Available Opportunities" value={jobs.length} />
           <Stat icon={<Tags className="size-5" />} label="Job Categories" value={activeCategories.length} />
@@ -216,7 +216,7 @@ function Home() {
           <EditorialHeading
             eyebrow="Current openings"
             title="Featured Opportunities"
-            description="Explore some of the latest opportunities available on NorthStar."
+            description="Explore some of the latest opportunities available on Northstar Traveling Agency."
           />
           {featured.length === 0 ? (
             <EmptyState text="No published opportunities yet. Please check back soon." />
@@ -264,7 +264,7 @@ function Home() {
           <EditorialHeading
             light
             eyebrow="A clearer path forward"
-            title="Why Choose NorthStar"
+            title="Why Choose Northstar Traveling Agency"
             description="Practical tools and transparent information for exploring your next international career step."
           />
           <div className="grid gap-px overflow-hidden rounded-lg bg-navy-foreground/15 sm:grid-cols-2 lg:grid-cols-4">
@@ -325,7 +325,7 @@ function Home() {
               Your Next Opportunity Could Be Closer Than You Think
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-navy-foreground/80 sm:text-lg">
-              Explore international opportunities and take the next step in your career journey with NorthStar.
+              Explore international opportunities and take the next step in your career journey with Northstar Traveling Agency.
             </p>
             <Button asChild size="lg" className="mt-8 h-12 bg-accent px-7 text-accent-foreground hover:bg-accent/90">
               <Link to="/opportunities">Browse Opportunities <ArrowRight className="ml-2 size-4" /></Link>
