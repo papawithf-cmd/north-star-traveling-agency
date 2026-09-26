@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Admin Portal — SkyBridge Careers" },
+      { title: "Admin Portal — Northstar Traveling Agency" },
       { name: "description", content: "Manage opportunities, categories, companies and enquiries." },
       { name: "robots", content: "noindex" },
     ],
@@ -75,7 +75,7 @@ function AdminLayout() {
       >
         <div className="flex h-16 items-center border-b border-sidebar-border px-5">
           <Link to="/" className="font-display text-base font-bold">
-            SkyBridge <span className="text-sidebar-primary">Admin</span>
+            Northstar <span className="text-sidebar-primary">Admin</span>
           </Link>
         </div>
         <nav className="flex flex-col gap-1 p-3">
