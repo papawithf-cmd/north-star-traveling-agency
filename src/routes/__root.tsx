@@ -34,10 +34,26 @@ function NotFoundComponent() {
   );
 }
 
+// A deploy replaces hashed asset files, so a tab opened before the deploy fails
+// to lazy-load a route chunk. Reload once to pick up the new build.
+const STALE_CHUNK = /dynamically imported module|Importing a module script failed|error loading dynamically imported/i;
+const RELOAD_KEY = "lovable:stale-chunk-reloaded";
+
+function recoverFromStaleChunk(error: unknown): boolean {
+  if (typeof window === "undefined") return false;
+  const message = error instanceof Error ? error.message : String(error);
+  if (!STALE_CHUNK.test(message)) return false;
+  if (sessionStorage.getItem(RELOAD_KEY)) return false;
+  sessionStorage.setItem(RELOAD_KEY, "1");
+  window.location.reload();
+  return true;
+}
+
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
+    if (recoverFromStaleChunk(error)) return;
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
@@ -116,6 +132,24 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    sessionStorage.removeItem(RELOAD_KEY);
+    const onPreloadError = (event: Event) => {
+      if (recoverFromStaleChunk((event as CustomEvent<{ message?: string }>).detail ?? event)) {
+        event.preventDefault();
+      }
+    };
+    const onRejection = (event: PromiseRejectionEvent) => {
+      if (recoverFromStaleChunk(event.reason)) event.preventDefault();
+    };
+    window.addEventListener("vite:preloadError", onPreloadError);
+    window.addEventListener("unhandledrejection", onRejection);
+    return () => {
+      window.removeEventListener("vite:preloadError", onPreloadError);
+      window.removeEventListener("unhandledrejection", onRejection);
+    };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
