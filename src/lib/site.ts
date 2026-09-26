@@ -7,6 +7,8 @@ import caregivers from "@/assets/cat-caregivers.jpg";
 import security from "@/assets/cat-security.jpg";
 import courier from "@/assets/cat-courier.jpg";
 import delivery from "@/assets/cat-delivery.jpg";
+import drivers from "@/assets/cat-drivers.jpg";
+import restaurant from "@/assets/cat-restaurant.jpg";
 
 export const PUBLIC_STATUSES = ["published", "approved", "featured", "urgent"];
 
@@ -39,10 +41,31 @@ const fallbackImages: Record<string, string> = {
   caregivers: caregivers,
   security: security,
   "private-courier": courier,
+  courier: courier,
   delivery: delivery,
+  "delivery-companies": delivery,
+  drivers: drivers,
+  driver: drivers,
+  chauffeur: drivers,
+  "truck-drivers": drivers,
+  "restaurant-food-shop": restaurant,
+  restaurant: restaurant,
+  "restaurant-food": restaurant,
+  "food-shop": restaurant,
+  hospitality: restaurant,
 };
 
-const gallery = [airHostess, airmen, groundCrew, caregivers, security, courier, delivery];
+const gallery = [
+  airHostess,
+  airmen,
+  groundCrew,
+  caregivers,
+  security,
+  courier,
+  delivery,
+  drivers,
+  restaurant,
+];
 
 /** Resolve a stored image value (storage path or external URL) to a displayable URL. */
 export function mediaUrl(path?: string | null) {
