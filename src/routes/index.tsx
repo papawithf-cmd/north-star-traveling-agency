@@ -123,12 +123,31 @@ function Home() {
         </div>
       </section>
 
-      <section className="container-page py-16">
-        <SectionHeading
-          eyebrow="Opportunities"
-          title="Featured Opportunities"
-          action={{ to: "/opportunities", label: "View all" }}
-        />
+      <section className="container-page py-20 sm:py-24">
+        <div className="mx-auto mb-12 max-w-2xl text-center">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-secondary">
+            Opportunities
+          </p>
+          <h2 className="mt-4 font-serif text-4xl font-light leading-tight text-foreground sm:text-5xl">
+            Career Opportunities
+          </h2>
+          <div className="mt-6 flex items-center justify-center gap-3" aria-hidden="true">
+            <span className="h-px w-12 bg-border" />
+            <span className="size-1.5 rotate-45 bg-accent" />
+            <span className="h-px w-12 bg-border" />
+          </div>
+          <p className="mt-6 text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Handpicked vacancies from verified employers — reviewed by our team and refreshed as new
+            roles open across aviation, care, security and logistics.
+          </p>
+          <div className="mt-8 flex justify-center">
+            <Button asChild variant="outline">
+              <Link to="/opportunities">
+                View all opportunities <ArrowRight className="ml-1.5 size-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
         {list.length === 0 ? (
           <EmptyState text="No published opportunities yet. Please check back soon." />
         ) : (
