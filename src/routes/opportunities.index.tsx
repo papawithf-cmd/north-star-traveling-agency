@@ -37,7 +37,7 @@ export const Route = createFileRoute("/opportunities/")({
   }),
   head: () => ({
     meta: [
-      { title: "Browse Opportunities — SkyBridge Careers" },
+      { title: "Browse Opportunities — Northstar Traveling Agency" },
       {
         name: "description",
         content:
@@ -110,7 +110,7 @@ function OpportunitiesPage() {
             <span className="h-px w-12 bg-navy-foreground/25" />
           </div>
           <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-navy-foreground/80 sm:text-base">
-            Every verified vacancy from Northstar Traveling Agency Kenya Ltd — filter by keyword,
+            Every verified vacancy from Northstar Traveling Agency — filter by keyword,
             location, category and employment type.
           </p>
         </div>
