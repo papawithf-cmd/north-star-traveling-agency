@@ -12,6 +12,7 @@ import {
   Settings,
   ExternalLink,
   Users,
+  Quote,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ const links = [
   { to: "/admin/companies", label: "Companies", icon: Building2, exact: false },
   { to: "/admin/applications", label: "Applications", icon: Users, exact: false },
   { to: "/admin/enquiries", label: "Enquiries", icon: Inbox, exact: false },
+  { to: "/admin/testimonials", label: "Testimonials", icon: Quote, exact: false },
   { to: "/admin/settings", label: "Site settings", icon: Settings, exact: false },
 ] as const;
 
