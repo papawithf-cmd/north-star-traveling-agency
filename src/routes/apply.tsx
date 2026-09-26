@@ -16,7 +16,7 @@ export const Route = createFileRoute("/apply")({
   }),
   head: () => ({
     meta: [
-      { title: "Create Your Applicant Account — SkyBridge Careers" },
+      { title: "Create Your Applicant Account — Northstar Traveling Agency" },
       {
         name: "description",
         content: "Register a free applicant account to apply for verified opportunities and track your application status.",
