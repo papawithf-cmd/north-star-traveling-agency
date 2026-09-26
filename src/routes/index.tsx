@@ -53,27 +53,27 @@ export const Route = createFileRoute("/")({
 });
 
 const countries = [
-  { label: "Australia", query: "Australia", code: "AU" },
-  { label: "Bahrain", query: "Bahrain", code: "BH" },
-  { label: "Canada", query: "Canada", code: "CA" },
-  { label: "France", query: "France", code: "FR" },
-  { label: "Germany", query: "Germany", code: "DE" },
-  { label: "Ireland", query: "Ireland", code: "IE" },
-  { label: "Kuwait", query: "Kuwait", code: "KW" },
-  { label: "Luxembourg", query: "Luxembourg", code: "LU" },
-  { label: "Malaysia", query: "Malaysia", code: "MY" },
-  { label: "Malta", query: "Malta", code: "MT" },
-  { label: "Mauritius", query: "Mauritius", code: "MU" },
-  { label: "Netherlands", query: "Netherlands", code: "NL" },
-  { label: "New Zealand", query: "New Zealand", code: "NZ" },
-  { label: "Oman", query: "Oman", code: "OM" },
-  { label: "Poland", query: "Poland", code: "PL" },
-  { label: "Qatar", query: "Qatar", code: "QA" },
-  { label: "Saudi Arabia", query: "Saudi Arabia", code: "SA" },
-  { label: "Switzerland", query: "Switzerland", code: "CH" },
-  { label: "Turkey", query: "Turkey", code: "TR" },
-  { label: "UAE / Dubai", query: "Dubai", code: "AE" },
-  { label: "United Kingdom", query: "United Kingdom", code: "GB" },
+  { label: "Australia", query: "Australia", code: "AU", flag: "🇦🇺" },
+  { label: "Bahrain", query: "Bahrain", code: "BH", flag: "🇧🇭" },
+  { label: "Canada", query: "Canada", code: "CA", flag: "🇨🇦" },
+  { label: "France", query: "France", code: "FR", flag: "🇫🇷" },
+  { label: "Germany", query: "Germany", code: "DE", flag: "🇩🇪" },
+  { label: "Ireland", query: "Ireland", code: "IE", flag: "🇮🇪" },
+  { label: "Kuwait", query: "Kuwait", code: "KW", flag: "🇰🇼" },
+  { label: "Luxembourg", query: "Luxembourg", code: "LU", flag: "🇱🇺" },
+  { label: "Malaysia", query: "Malaysia", code: "MY", flag: "🇲🇾" },
+  { label: "Malta", query: "Malta", code: "MT", flag: "🇲🇹" },
+  { label: "Mauritius", query: "Mauritius", code: "MU", flag: "🇲🇺" },
+  { label: "Netherlands", query: "Netherlands", code: "NL", flag: "🇳🇱" },
+  { label: "New Zealand", query: "New Zealand", code: "NZ", flag: "🇳🇿" },
+  { label: "Oman", query: "Oman", code: "OM", flag: "🇴🇲" },
+  { label: "Poland", query: "Poland", code: "PL", flag: "🇵🇱" },
+  { label: "Qatar", query: "Qatar", code: "QA", flag: "🇶🇦" },
+  { label: "Saudi Arabia", query: "Saudi Arabia", code: "SA", flag: "🇸🇦" },
+  { label: "Switzerland", query: "Switzerland", code: "CH", flag: "🇨🇭" },
+  { label: "Turkey", query: "Turkey", code: "TR", flag: "🇹🇷" },
+  { label: "UAE / Dubai", query: "Dubai", code: "AE", flag: "🇦🇪" },
+  { label: "United Kingdom", query: "United Kingdom", code: "GB", flag: "🇬🇧" },
 ] as const;
 
 type HomeJob = OpportunityRow & {
@@ -247,8 +247,12 @@ function Home() {
               search={{ location: country.query }}
               className="group flex min-h-28 flex-col justify-between rounded-lg border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-secondary hover:shadow-card"
             >
-              <span className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary" aria-hidden="true">
-                {country.code}
+              <span
+                className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-2xl leading-none"
+                aria-label={`${country.label} flag`}
+                role="img"
+              >
+                {country.flag}
               </span>
               <span className="mt-4 flex items-end justify-between gap-2">
                 <span className="text-sm font-semibold leading-tight text-foreground">{country.label}</span>
