@@ -9,6 +9,7 @@ import { fetchSettings } from "@/lib/site";
 const nav = [
   { to: "/", label: "Home" },
   { to: "/opportunities", label: "Opportunities" },
+  { to: "/match", label: "AI Match" },
   { to: "/categories", label: "Job Categories" },
   { to: "/companies", label: "Companies" },
   { to: "/about", label: "About Us" },
