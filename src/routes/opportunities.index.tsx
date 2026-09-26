@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EMPLOYMENT_TYPES, fetchCategories, fetchPublicOpportunities } from "@/lib/site";
+import careerOpportunitiesBg from "@/assets/northstar-career-opportunities-bg.jpg";
 
 type Search = {
   q?: string | undefined;
@@ -84,20 +85,31 @@ function OpportunitiesPage() {
 
   return (
     <SiteLayout>
-      <header className="border-b border-border bg-surface">
-        <div className="container-page py-16 text-center sm:py-20">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-secondary">
+      <header className="relative overflow-hidden bg-navy text-navy-foreground">
+        <img
+          src={careerOpportunitiesBg}
+          alt=""
+          aria-hidden="true"
+          width={1920}
+          height={912}
+          loading="lazy"
+          className="absolute inset-0 size-full object-cover object-[68%_center] sm:object-center"
+        />
+        <div className="absolute inset-0 bg-navy/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/40 to-navy/85" />
+        <div className="relative container-page py-16 text-center sm:py-24">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent">
             Opportunities
           </p>
-          <h1 className="mx-auto mt-4 max-w-3xl font-serif text-4xl font-light leading-tight text-foreground sm:text-5xl">
+          <h1 className="mx-auto mt-4 max-w-3xl font-serif text-4xl font-light leading-tight text-navy-foreground sm:text-5xl">
             Career Opportunities
           </h1>
           <div className="mt-6 flex items-center justify-center gap-3" aria-hidden="true">
-            <span className="h-px w-12 bg-border" />
+            <span className="h-px w-12 bg-navy-foreground/25" />
             <span className="size-1.5 rotate-45 bg-accent" />
-            <span className="h-px w-12 bg-border" />
+            <span className="h-px w-12 bg-navy-foreground/25" />
           </div>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-navy-foreground/80 sm:text-base">
             Every verified vacancy from Northstar Traveling Agency Kenya Ltd — filter by keyword,
             location, category and employment type.
           </p>
