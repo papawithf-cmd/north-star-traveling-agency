@@ -44,9 +44,12 @@ BEGIN
   INSERT INTO public.profiles (id, name, email)
   VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'name', NEW.email), NEW.email)
   ON CONFLICT (id) DO NOTHING;
-  -- first user becomes admin
-  IF (SELECT count(*) FROM public.user_roles WHERE role = 'admin') = 0 THEN
-    INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin') ON CONFLICT DO NOTHING;
+  -- The designated Northstar administrator always receives the admin role.
+  IF lower(NEW.email) = 'northstaragencyweb@gmail.com'
+     OR (SELECT count(*) FROM public.user_roles WHERE role = 'admin') = 0 THEN
+    INSERT INTO public.user_roles (user_id, role)
+    VALUES (NEW.id, 'admin')
+    ON CONFLICT DO NOTHING;
   END IF;
   RETURN NEW;
 END; $$;
