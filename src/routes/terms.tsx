@@ -5,9 +5,9 @@ import { PageHeader, SiteLayout } from "@/components/site/SiteLayout";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms & Conditions — SkyBridge Careers" },
-      { name: "description", content: "Terms governing the use of the SkyBridge Careers opportunities website." },
-      { property: "og:title", content: "Terms & Conditions — SkyBridge Careers" },
+      { title: "Terms & Conditions — Northstar Traveling Agency" },
+      { name: "description", content: "Terms governing the use of the Northstar Traveling Agency opportunities website." },
+      { property: "og:title", content: "Terms & Conditions — Northstar Traveling Agency" },
       { property: "og:description", content: "Rules for using this opportunities website." },
     ],
   }),
