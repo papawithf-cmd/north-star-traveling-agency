@@ -143,13 +143,23 @@ function Home() {
               Explore international career opportunities, discover destinations and take the next step
               toward your professional future.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button asChild size="lg" className="h-12 bg-accent px-6 text-accent-foreground hover:bg-accent/90">
                 <Link to="/opportunities">
                   Explore Opportunities <ArrowRight className="ml-2 size-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 border-navy-foreground/45 bg-navy/20 px-6 text-navy-foreground hover:bg-navy-foreground hover:text-navy">
+                <Link to="/auth">
+                  Sign In
+                </Link>
+              </Button>
+              <Button asChild size="lg" className="h-12 border border-accent bg-transparent px-6 text-accent hover:bg-accent hover:text-accent-foreground">
+                <a href="/auth?mode=signup">
+                  Create Account
+                </a>
+              </Button>
+              <Button asChild size="lg" variant="ghost" className="h-12 px-4 text-navy-foreground/90 hover:bg-navy-foreground/10 hover:text-navy-foreground">
                 <Link to="/about">Learn More</Link>
               </Button>
             </div>
@@ -200,6 +210,26 @@ function Home() {
             </Select>
             <Button onClick={search} size="lg" className="h-12 bg-accent px-6 text-accent-foreground hover:bg-accent/90">
               <Search className="mr-2 size-4" /> Search Opportunities
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="container-page -mt-2 pb-2 pt-8 sm:pt-10" aria-label="Account access">
+        <div className="rounded-lg border border-border bg-card p-5 shadow-card sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-normal text-secondary">Your career journey</p>
+            <h2 className="mt-1.5 font-display text-lg font-bold sm:text-xl">Create an account to keep your opportunities together</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Save your progress, access your applications and return to Northstar Traveling Agency whenever you need.
+            </p>
+          </div>
+          <div className="mt-4 flex shrink-0 flex-col gap-2 sm:mt-0 sm:flex-row">
+            <Button asChild variant="outline">
+              <Link to="/auth">Sign In</Link>
+            </Button>
+            <Button asChild>
+              <a href="/auth?mode=signup">Create Account</a>
             </Button>
           </div>
         </div>
