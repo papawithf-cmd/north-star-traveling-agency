@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, Search, X, Plane, Shield } from "lucide-react";
+import { Menu, Search, X, Plane } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ export function Header() {
           </span>
           <span className="leading-tight">
             <span className="block font-display text-base font-bold text-foreground">
-              {settings?.site_name ?? "SkyBridge Careers"}
+              {settings?.site_name ?? "Northstar Traveling Agency"}
             </span>
             <span className="block text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
               Verified opportunities
