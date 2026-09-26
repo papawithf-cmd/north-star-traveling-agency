@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, ShieldCheck } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
@@ -13,10 +13,10 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Admin Login — SkyBridge Careers" },
-      { name: "description", content: "Secure sign-in for SkyBridge Careers administrators." },
-      { property: "og:title", content: "Admin Login — SkyBridge Careers" },
-      { property: "og:description", content: "Administrator access to the opportunities portal." },
+      { title: "Sign In — Northstar Traveling Agency" },
+      { name: "description", content: "Sign in or create your Northstar Traveling Agency account." },
+      { property: "og:title", content: "Sign In — Northstar Traveling Agency" },
+      { property: "og:description", content: "Access Northstar Traveling Agency opportunities." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -29,6 +29,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function routeByRole() {
     const { data: userData } = await supabase.auth.getUser();
@@ -53,7 +54,7 @@ function AuthPage() {
   async function signIn(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
     setBusy(false);
     if (error) {
       toast.error(error.message);
@@ -67,7 +68,7 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: email.trim(),
       password,
       options: { emailRedirectTo: window.location.origin, data: { name } },
     });
@@ -103,9 +104,9 @@ function AuthPage() {
           <span className="flex size-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <ShieldCheck className="size-5" />
           </span>
-          <h1 className="mt-4 font-display text-2xl font-bold">Administrator access</h1>
+          <h1 className="mt-4 font-display text-2xl font-bold">Welcome to Northstar Traveling Agency</h1>
           <p className="mt-1.5 text-sm text-muted-foreground">
-            Sign in to manage opportunities, companies and enquiries.
+            Sign in or create an account to explore verified opportunities and apply.
           </p>
 
           <Tabs defaultValue="signin" className="mt-6">
@@ -122,7 +123,12 @@ function AuthPage() {
                 </div>
                 <div>
                   <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1.5" />
+                  <div className="relative mt-1.5">
+                    <Input id="password" type={showPassword ? "text" : "password"} required value={password} onChange={(e) => setPassword(e.target.value)} className="pr-10" />
+                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Hide password" : "Show password"}>
+                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={busy}>
                   {busy ? "Signing in…" : "Sign in"}
@@ -142,7 +148,12 @@ function AuthPage() {
                 </div>
                 <div>
                   <Label htmlFor="su-password">Password</Label>
-                  <Input id="su-password" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1.5" />
+                  <div className="relative mt-1.5">
+                    <Input id="su-password" type={showPassword ? "text" : "password"} required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} className="pr-10" />
+                    <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground hover:text-foreground" aria-label={showPassword ? "Hide password" : "Show password"}>
+                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={busy}>
                   {busy ? "Creating…" : "Create account"}
