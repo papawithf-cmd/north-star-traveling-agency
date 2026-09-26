@@ -45,15 +45,35 @@ export function Footer() {
         <div>
           <h4 className="text-sm font-semibold uppercase tracking-normal text-accent">Get in touch</h4>
           <ul className="mt-5 space-y-4 text-sm leading-relaxed text-navy-foreground/75">
-            {settings?.phone ? (
-              <li className="flex items-start gap-2"><Phone className="mt-0.5 size-4 shrink-0" />{settings.phone}</li>
-            ) : null}
-            {settings?.whatsapp ? (
-              <li className="flex items-start gap-2"><MessageCircle className="mt-0.5 size-4 shrink-0" />{settings.whatsapp}</li>
-            ) : null}
-            {settings?.email ? (
-              <li className="flex items-start gap-2"><Mail className="mt-0.5 size-4 shrink-0" />{settings.email}</li>
-            ) : null}
+            <li>
+              <div className="mb-2 flex items-center gap-2">
+                <Phone className="size-4 shrink-0" />
+                <span className="font-semibold text-navy-foreground">Call us</span>
+              </div>
+              <div className="ml-6 space-y-1.5">
+                {[
+                  { label: "+254 762 932 660", href: "tel:+254762932660" },
+                  { label: "+254 140 863 587", href: "tel:+254140863587" },
+                  { label: "+254 100 922 332", href: "tel:+254100922332" },
+                ].map((phone) => (
+                  <a key={phone.href} href={phone.href} className="block hover:text-accent hover:underline">
+                    {phone.label}
+                  </a>
+                ))}
+              </div>
+            </li>
+            <li className="flex items-start gap-2">
+              <MessageCircle className="mt-0.5 size-4 shrink-0" />
+              <a href="https://wa.me/254100922332" target="_blank" rel="noreferrer" className="hover:text-accent hover:underline">
+                WhatsApp: +254 100 922 332
+              </a>
+            </li>
+            <li className="flex items-start gap-2 break-all">
+              <Mail className="mt-0.5 size-4 shrink-0" />
+              <a href="mailto:northstaragencyweb@gmail.com" className="hover:text-accent hover:underline">
+                northstaragencyweb@gmail.com
+              </a>
+            </li>
             {settings?.address ? (
               <li className="flex items-start gap-2"><MapPin className="mt-0.5 size-4 shrink-0" />{settings.address}</li>
             ) : null}
