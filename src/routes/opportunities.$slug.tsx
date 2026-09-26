@@ -27,12 +27,12 @@ import { OPPORTUNITY_SELECT, PUBLIC_STATUSES, categoryImage, formatDate, mediaUr
 export const Route = createFileRoute("/opportunities/$slug")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.slug.replace(/-/g, " ")} — SkyBridge Careers` },
+      { title: `${params.slug.replace(/-/g, " ")} — Northstar Traveling Agency` },
       {
         name: "description",
         content: `Full details, requirements, duration and application instructions for this verified vacancy.`,
       },
-      { property: "og:title", content: `${params.slug.replace(/-/g, " ")} — SkyBridge Careers` },
+      { property: "og:title", content: `${params.slug.replace(/-/g, " ")} — Northstar Traveling Agency` },
       { property: "og:description", content: "Verified vacancy details and application instructions." },
     ],
   }),
