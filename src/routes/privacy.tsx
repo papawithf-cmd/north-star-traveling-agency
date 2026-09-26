@@ -5,9 +5,9 @@ import { PageHeader, SiteLayout } from "@/components/site/SiteLayout";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — SkyBridge Careers" },
-      { name: "description", content: "How SkyBridge Careers collects, uses and protects personal information submitted through the website." },
-      { property: "og:title", content: "Privacy Policy — SkyBridge Careers" },
+      { title: "Privacy Policy — Northstar Traveling Agency" },
+      { name: "description", content: "How Northstar Traveling Agency collects, uses and protects personal information submitted through the website." },
+      { property: "og:title", content: "Privacy Policy — Northstar Traveling Agency" },
       { property: "og:description", content: "Our approach to personal data and enquiries." },
     ],
   }),
