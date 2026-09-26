@@ -8,13 +8,13 @@ import { fetchSettings } from "@/lib/site";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Us — SkyBridge Careers" },
+      { title: "About Us — Northstar Traveling Agency" },
       {
         name: "description",
         content:
-          "SkyBridge Careers connects professionals with verified employers across aviation, caregiving, security, courier and delivery industries.",
+          "Northstar Traveling Agency connects professionals with verified employers across aviation, caregiving, security, courier and delivery industries.",
       },
-      { property: "og:title", content: "About SkyBridge Careers" },
+      { property: "og:title", content: "About Northstar Traveling Agency" },
       { property: "og:description", content: "How we verify and publish employment opportunities." },
     ],
   }),
@@ -28,7 +28,7 @@ function AboutPage() {
     <SiteLayout>
       <PageHeader
         eyebrow="About us"
-        title={`About ${settings?.site_name ?? "SkyBridge Careers"}`}
+        title={`About ${settings?.site_name ?? "Northstar Traveling Agency"}`}
         subtitle={settings?.tagline ?? "Verified employment opportunities worldwide."}
       />
       <div className="container-page py-12">
