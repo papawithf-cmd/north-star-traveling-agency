@@ -30,6 +30,10 @@ function AuthPage() {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [authTab, setAuthTab] = useState<"signin" | "signup">(() => {
+    if (typeof window === "undefined") return "signin";
+    return new URLSearchParams(window.location.search).get("mode") === "signup" ? "signup" : "signin";
+  });
 
   async function routeByRole() {
     const { data: userData } = await supabase.auth.getUser();
@@ -145,7 +149,7 @@ function AuthPage() {
             Sign in or create an account to explore verified opportunities and apply.
           </p>
 
-          <Tabs defaultValue="signin" className="mt-6">
+          <Tabs value={authTab} onValueChange={(value) => setAuthTab(value as "signin" | "signup")} className="mt-6">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="signin">Sign in</TabsTrigger>
               <TabsTrigger value="signup">Create account</TabsTrigger>
