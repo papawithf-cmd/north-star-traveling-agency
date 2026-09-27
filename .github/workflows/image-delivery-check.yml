@@ -1,0 +1,28 @@
+name: Image delivery verification
+
+on:
+  push:
+    branches:
+      - fix/image-delivery-500
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Verify uploaded object is publicly readable
+        run: |
+          set -e
+          url="https://vjcopvvprgodsnvqjyzo.supabase.co/storage/v1/object/public/site-images/opportunities/81bd896c-7d87-4c59-8443-f9e381a30d0a/1790509148900-flh1wi.png"
+          curl -fsSLI "$url"
+          curl -fsSL "$url" -o /tmp/opportunity-image.png
+          file /tmp/opportunity-image.png | grep -E "PNG image data|JPEG image data|Web/P image data"
+      - name: Build application
+        run: bun run build
