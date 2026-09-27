@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { OPPORTUNITY_SELECT, PUBLIC_STATUSES, categoryImage, formatDate, mediaUrl } from "@/lib/site";
+import { RESTORED_PUBLIC_OPPORTUNITIES } from "@/lib/restored-public-opportunities";
 
 export const Route = createFileRoute("/opportunities/$slug")({
   head: ({ params }) => ({
@@ -47,7 +48,10 @@ async function fetchOpportunity(slug: string) {
     .in("status", PUBLIC_STATUSES)
     .maybeSingle();
   if (error) throw error;
-  if (!data) return null;
+  if (!data) {
+    const restored = RESTORED_PUBLIC_OPPORTUNITIES.find((item) => item.slug === slug);
+    return restored ? { ...restored, images: [] } : null;
+  }
   const { data: images } = await supabase
     .from("opportunity_images")
     .select("*")
