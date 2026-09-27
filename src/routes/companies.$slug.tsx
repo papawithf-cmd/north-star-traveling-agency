@@ -22,11 +22,9 @@ export const Route = createFileRoute("/companies/$slug")({
 
 function CompanyLogoBlock({ company }: { company: { name: string; logo?: string | null; logo_verified?: boolean | null; website?: string | null } }) {
   const [sourceIndex, setSourceIndex] = useState(0);
-  const source = sourceIndex === 0 && company.logo && company.logo_verified
-    ? company.logo
-    : sourceIndex === 1
-      ? companyLogoUrl(company)
-      : null;
+  const explicit = company.logo && company.logo_verified ? company.logo : null;
+  const automatic = companyLogoUrl(company);
+  const source = sourceIndex === 0 ? explicit : sourceIndex === 1 ? automatic : null;
 
   if (!source) return null;
 
