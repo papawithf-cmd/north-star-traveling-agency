@@ -162,9 +162,7 @@ export const importOpportunityImage = createServerFn({ method: "POST" })
     if (!ext) throw new Error("Only JPG, PNG and WebP images are supported.");
 
     const path = `${data.folder}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    const { error } = await supabaseAdmin.storage
+    const { error } = await context.supabase.storage
       .from("site-images")
       .upload(path, new Blob([source.buffer], { type: source.contentType }), {
         contentType: source.contentType,
@@ -175,7 +173,7 @@ export const importOpportunityImage = createServerFn({ method: "POST" })
       throw new Error(`Image save failed: ${error.message}`);
     }
 
-    const { data: stored, error: verifyError } = await supabaseAdmin.storage
+    const { data: stored, error: verifyError } = await context.supabase.storage
       .from("site-images")
       .download(path);
 
