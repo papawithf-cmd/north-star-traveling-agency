@@ -25,7 +25,6 @@ import housekeeping from "@/assets/cat-housekeeping.jpg";
 import logistics from "@/assets/cat-logistics.jpg";
 import plumbers from "@/assets/cat-plumbers.jpg";
 import warehouse from "@/assets/cat-warehouse.jpg";
-import { restoreOriginalOpportunities } from "@/lib/restore-original-opportunities.functions";
 
 export const PUBLIC_STATUSES = ["published", "approved", "featured", "urgent"];
 
@@ -241,15 +240,6 @@ export async function fetchCategories() {
 }
 
 export async function fetchPublicOpportunities() {
-  // Ensure the original project-defined opportunity catalogue exists in the
-  // same production database before reading it. Missing rows are inserted;
-  // existing rows are preserved.
-  try {
-    await restoreOriginalOpportunities();
-  } catch (restoreError) {
-    console.warn("Opportunity restore check skipped:", restoreError);
-  }
-
   const { data, error } = await supabase
     .from("opportunities")
     .select(OPPORTUNITY_SELECT)
