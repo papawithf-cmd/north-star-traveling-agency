@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/portal")({
   head: () => ({
     meta: [
-      { title: "My Applications — SkyBridge Careers" },
+      { title: "My Applications — Northstar Traveling Agency" },
       { name: "description", content: "Track the progress of your job applications." },
       { name: "robots", content: "noindex" },
     ],
