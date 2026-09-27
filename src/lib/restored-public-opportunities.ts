@@ -1,3 +1,5 @@
+// Canonical fallback catalogue: keep the original Northstar opportunities visible
+// even when the live database is missing seeded rows.
 export const RESTORED_PUBLIC_OPPORTUNITIES: any[] = [
   {
     id: "restored-cabin-crew-international-routes", title: "Cabin Crew — International Routes", slug: "cabin-crew-international-routes",
