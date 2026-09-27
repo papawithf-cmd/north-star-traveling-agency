@@ -29,6 +29,7 @@ import {
   mediaUrl,
   imageUrlProblem,
   slugify,
+  uniqueOpportunitySlug,
 } from "@/lib/site";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 
@@ -172,7 +173,10 @@ function OpportunityEditor() {
     mutationFn: async (extra: Row = {}) => {
       const payload: Row = { ...form, ...extra };
       payload['title'] = str(payload, "title");
-      payload['slug'] = str(payload, "slug") || slugify(str(payload, "title"));
+      payload["slug"] = await uniqueOpportunitySlug(
+        str(payload, "slug") || slugify(str(payload, "title")),
+        recordId,
+      );
       for (const key of ["min_age", "max_age", "vacancies"]) {
         payload[key] = payload[key] === "" || payload[key] === undefined ? null : Number(payload[key]);
       }
