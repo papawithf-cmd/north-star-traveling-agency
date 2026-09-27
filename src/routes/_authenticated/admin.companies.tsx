@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchCompanies, imageUrlProblem, slugify } from "@/lib/site";
+import { companyLogoUrl, fetchCompanies, imageUrlProblem, slugify } from "@/lib/site";
 
 export const Route = createFileRoute("/_authenticated/admin/companies")({
   component: AdminCompanies,
@@ -21,7 +21,6 @@ type Form = {
   name: string;
   slug: string;
   logo: string;
-  logoVerified: boolean;
   description: string;
   industry: string;
   country: string;
@@ -38,7 +37,6 @@ const empty: Form = {
   name: "",
   slug: "",
   logo: "",
-  logoVerified: false,
   description: "",
   industry: "",
   country: "",
@@ -70,22 +68,22 @@ function AdminCompanies() {
 
   const save = useMutation({
     mutationFn: async (value: Form) => {
-      const logo = value.logo.trim();
-      if (!logo) throw new Error("Add the company's official logo image URL.");
-      const logoProblem = imageUrlProblem(logo);
-      if (logoProblem) throw new Error(logoProblem);
-      if (!value.logoVerified) {
-        throw new Error("Verify the logo against the company's official website before saving.");
+      const manualLogo = value.logo.trim();
+      const manualLogoProblem = imageUrlProblem(manualLogo);
+      if (manualLogoProblem) throw new Error(manualLogoProblem);
+
+      const logo = manualLogo || companyLogoUrl({ website: value.website });
+      if (!logo) {
+        throw new Error("Add the company's official website so its real logo can be resolved.");
       }
-      if (logoPreviewStatus === "invalid") {
-        throw new Error("The logo image could not be loaded. Check the URL and use the company's real logo.");
+      if (manualLogo && logoPreviewStatus === "invalid") {
+        throw new Error("The logo image could not be loaded. Check the URL and use a direct image URL.");
       }
 
       const payload = {
         name: value.name,
         slug: value.slug || slugify(value.name),
         logo,
-        logo_verified: true,
         description: value.description || null,
         industry: value.industry || null,
         country: value.country || null,
@@ -157,12 +155,11 @@ function AdminCompanies() {
             <Textarea id="co-desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1.5" />
           </div>
           <div>
-            <Label htmlFor="co-logo">Official Logo URL</Label>
+            <Label htmlFor="co-logo">Logo URL (optional)</Label>
             <Input
               id="co-logo"
               type="url"
-              required
-              placeholder="https://official-company-site.com/logo.svg"
+              placeholder="Leave blank to use the official website logo automatically"
               value={form.logo}
               onChange={(e) => {
                 setLogoPreviewStatus(e.target.value.trim() ? "loading" : "idle");
@@ -171,8 +168,13 @@ function AdminCompanies() {
               className="mt-1.5"
             />
             <p className="mt-1.5 text-xs text-muted-foreground">
-              Use the company's real logo from its official website or official brand/media page. We never guess logos from company names.
+              Best practice: leave this blank and enter the company's official website. The logo will be resolved from that official domain automatically.
             </p>
+            {form.website ? (
+              <p className="mt-2 text-xs font-medium text-secondary">
+                Automatic logo source: {companyLogoUrl({ website: form.website }) ?? "valid official website URL required"}
+              </p>
+            ) : null}
             {form.logo ? (
               <div className="mt-3 rounded-lg border border-border bg-muted/20 p-3">
                 <div className="flex min-h-20 items-center justify-center">
@@ -188,7 +190,7 @@ function AdminCompanies() {
                   {logoPreviewStatus === "valid"
                     ? "Logo image loaded."
                     : logoPreviewStatus === "invalid"
-                      ? "Logo image could not be loaded. Use a direct image URL."
+                      ? "Logo image could not be loaded. The official-website logo can still be used automatically."
                       : "Checking logo image…"}
                 </p>
               </div>
@@ -199,19 +201,14 @@ function AdminCompanies() {
               <Label htmlFor={`co-${f.key}`}>{f.label}</Label>
               <Input
                 id={`co-${f.key}`}
+                type={f.key === "website" ? "url" : "text"}
+                required={f.key === "website" && !form.id}
                 value={form[f.key]}
                 onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
                 className="mt-1.5"
               />
             </div>
           ))}
-          <div className="flex items-center gap-3">
-            <Switch id="co-logo-verified" checked={form.logoVerified} onCheckedChange={(v) => setForm({ ...form, logoVerified: v })} />
-            <Label htmlFor="co-logo-verified">Official logo verified</Label>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Saving a company requires this confirmation so an unverified or guessed logo never appears publicly.
-          </p>
                     <div className="flex items-center gap-3">
             <Switch id="co-verified" checked={form.verified} onCheckedChange={(v) => setForm({ ...form, verified: v })} />
             <Label htmlFor="co-verified">Verified employer</Label>
@@ -244,8 +241,8 @@ function AdminCompanies() {
                 <tr key={c.id} className="border-t border-border">
                   <td className="px-4 py-3 font-medium">
                     <div className="flex items-center gap-2.5">
-                      {c.logo && c.logo_verified ? (
-                        <img src={c.logo} alt="" className="size-9 rounded-md border border-border bg-white object-contain" />
+                      {companyLogoUrl(c) ? (
+                        <img src={companyLogoUrl(c)!} alt="" className="size-9 rounded-md border border-border bg-white object-contain p-1" />
                       ) : (
                         <span className="flex size-9 items-center justify-center rounded-md bg-primary/10 text-primary">
                           <Building2 className="size-4" />
@@ -270,7 +267,6 @@ function AdminCompanies() {
                             name: c.name,
                             slug: c.slug,
                             logo: c.logo ?? "",
-                            logoVerified: Boolean(c.logo_verified),
                             description: c.description ?? "",
                             industry: c.industry ?? "",
                             country: c.country ?? "",
