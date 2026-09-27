@@ -214,6 +214,20 @@ export const OPPORTUNITY_SELECT =
 
 export async function fetchSettings() {
   const { data } = await supabase.from("site_settings").select("*").limit(1).maybeSingle();
+
+  // The original project name is Northstar Traveling Agency. Normalize any
+  // stale legacy "SkyBridge Careers" value so the public site never reverts
+  // to the old branding while the database is being repaired.
+  if (data && data.site_name === "SkyBridge Careers") {
+    return {
+      ...data,
+      site_name: "Northstar Traveling Agency",
+      about_text:
+        data.about_text?.replace(/SkyBridge Careers/g, "Northstar Traveling Agency") ??
+        "Northstar Traveling Agency connects job seekers with verified employment opportunities.",
+    };
+  }
+
   return data;
 }
 
