@@ -196,7 +196,7 @@ const OPPORTUNITIES = [
   },
 ] as const;
 
-export const restoreOriginalOpportunities = createServerFn({ method: "POST" }).handler(async () => {
+export async function restoreOriginalOpportunitiesServer() {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
   const { data: current } = await supabaseAdmin
@@ -276,4 +276,9 @@ export const restoreOriginalOpportunities = createServerFn({ method: "POST" }).h
   if (opportunityError) throw opportunityError;
 
   return { restored: rows.length, total: OPPORTUNITIES.length };
-});
+}
+
+export const restoreOriginalOpportunities = createServerFn({ method: "POST" }).handler(
+  restoreOriginalOpportunitiesServer,
+);
+);
