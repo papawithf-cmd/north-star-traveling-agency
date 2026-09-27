@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Pencil, Trash2 } from "lucide-react";
+import { Building2, Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchCompanies, slugify } from "@/lib/site";
+import { companyLogoUrl, fetchCompanies, imageUrlProblem, slugify } from "@/lib/site";
 
 export const Route = createFileRoute("/_authenticated/admin/companies")({
   component: AdminCompanies,
@@ -49,7 +49,7 @@ const empty: Form = {
   verified: false,
 };
 
-const fields: { key: "industry" | "country" | "city" | "address" | "website" | "email" | "phone" | "whatsapp" | "logo"; label: string }[] = [
+const fields: { key: "industry" | "country" | "city" | "address" | "website" | "email" | "phone" | "whatsapp"; label: string }[] = [
   { key: "industry", label: "Industry" },
   { key: "country", label: "Country" },
   { key: "city", label: "City" },
@@ -58,20 +58,32 @@ const fields: { key: "industry" | "country" | "city" | "address" | "website" | "
   { key: "email", label: "Email" },
   { key: "phone", label: "Phone" },
   { key: "whatsapp", label: "WhatsApp" },
-  { key: "logo", label: "Logo URL" },
 ];
 
 function AdminCompanies() {
   const queryClient = useQueryClient();
   const [form, setForm] = useState<Form>(empty);
+  const [logoPreviewStatus, setLogoPreviewStatus] = useState<"idle" | "loading" | "valid" | "invalid">("idle");
   const { data: companies = [] } = useQuery({ queryKey: ["companies"], queryFn: fetchCompanies });
 
   const save = useMutation({
     mutationFn: async (value: Form) => {
+      const manualLogo = value.logo.trim();
+      const manualLogoProblem = imageUrlProblem(manualLogo);
+      if (manualLogoProblem) throw new Error(manualLogoProblem);
+
+      const logo = manualLogo || companyLogoUrl({ website: value.website });
+      if (!logo) {
+        throw new Error("Add the company's official website so its real logo can be resolved.");
+      }
+      if (manualLogo && logoPreviewStatus === "invalid") {
+        throw new Error("The logo image could not be loaded. Check the URL and use a direct image URL.");
+      }
+
       const payload = {
         name: value.name,
         slug: value.slug || slugify(value.name),
-        logo: value.logo || null,
+        logo,
         description: value.description || null,
         industry: value.industry || null,
         country: value.country || null,
@@ -91,6 +103,7 @@ function AdminCompanies() {
     onSuccess: () => {
       toast.success("Company saved");
       setForm(empty);
+      setLogoPreviewStatus("idle");
       queryClient.invalidateQueries({ queryKey: ["companies"] });
       queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
     },
@@ -141,18 +154,62 @@ function AdminCompanies() {
             <Label htmlFor="co-desc">Description</Label>
             <Textarea id="co-desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1.5" />
           </div>
+          <div>
+            <Label htmlFor="co-logo">Logo URL (optional)</Label>
+            <Input
+              id="co-logo"
+              type="url"
+              placeholder="Leave blank to use the official website logo automatically"
+              value={form.logo}
+              onChange={(e) => {
+                setLogoPreviewStatus(e.target.value.trim() ? "loading" : "idle");
+                setForm({ ...form, logo: e.target.value });
+              }}
+              className="mt-1.5"
+            />
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              Best practice: leave this blank and enter the company's official website. The logo will be resolved from that official domain automatically.
+            </p>
+            {form.website ? (
+              <p className="mt-2 text-xs font-medium text-secondary">
+                Automatic logo source: {companyLogoUrl({ website: form.website }) ?? "valid official website URL required"}
+              </p>
+            ) : null}
+            {form.logo ? (
+              <div className="mt-3 rounded-lg border border-border bg-muted/20 p-3">
+                <div className="flex min-h-20 items-center justify-center">
+                  <img
+                    src={form.logo}
+                    alt={form.name ? form.name + " logo preview" : "Company logo preview"}
+                    className="max-h-20 max-w-full object-contain"
+                    onLoad={() => setLogoPreviewStatus("valid")}
+                    onError={() => setLogoPreviewStatus("invalid")}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {logoPreviewStatus === "valid"
+                    ? "Logo image loaded."
+                    : logoPreviewStatus === "invalid"
+                      ? "Logo image could not be loaded. The official-website logo can still be used automatically."
+                      : "Checking logo image…"}
+                </p>
+              </div>
+            ) : null}
+          </div>
           {fields.map((f) => (
             <div key={f.key}>
               <Label htmlFor={`co-${f.key}`}>{f.label}</Label>
               <Input
                 id={`co-${f.key}`}
+                type={f.key === "website" ? "url" : "text"}
+                required={f.key === "website" && !form.id}
                 value={form[f.key]}
                 onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
                 className="mt-1.5"
               />
             </div>
           ))}
-          <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
             <Switch id="co-verified" checked={form.verified} onCheckedChange={(v) => setForm({ ...form, verified: v })} />
             <Label htmlFor="co-verified">Verified employer</Label>
           </div>
@@ -161,7 +218,7 @@ function AdminCompanies() {
               {form.id ? "Update" : "Create"}
             </Button>
             {form.id ? (
-              <Button type="button" variant="outline" onClick={() => setForm(empty)}>
+              <Button type="button" variant="outline" onClick={() => { setForm(empty); setLogoPreviewStatus("idle"); }}>
                 Cancel
               </Button>
             ) : null}
@@ -182,7 +239,18 @@ function AdminCompanies() {
             <tbody>
               {companies.map((c) => (
                 <tr key={c.id} className="border-t border-border">
-                  <td className="px-4 py-3 font-medium">{c.name}</td>
+                  <td className="px-4 py-3 font-medium">
+                    <div className="flex items-center gap-2.5">
+                      {companyLogoUrl(c) ? (
+                        <img src={companyLogoUrl(c)!} alt="" className="size-9 rounded-md border border-border bg-white object-contain p-1" />
+                      ) : (
+                        <span className="flex size-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                          <Building2 className="size-4" />
+                        </span>
+                      )}
+                      <span>{c.name}</span>
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">{[c.city, c.country].filter(Boolean).join(", ") || "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground">{c.email ?? c.phone ?? "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground">{c.verified ? "Yes" : "No"}</td>
@@ -193,6 +261,7 @@ function AdminCompanies() {
                         size="icon"
                         aria-label="Edit"
                         onClick={() =>
+                          setLogoPreviewStatus(c.logo ? "loading" : "idle");
                           setForm({
                             id: c.id,
                             name: c.name,
