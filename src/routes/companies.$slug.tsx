@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { BadgeCheck, Globe, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { PageHeader, SiteLayout } from "@/components/site/SiteLayout";
 import { OpportunityCard } from "@/components/site/OpportunityCard";
 import { EmptyState } from "@/routes/index";
-import { fetchCompanies, fetchPublicOpportunities } from "@/lib/site";
+import { companyLogoUrl, fetchCompanies, fetchPublicOpportunities } from "@/lib/site";
 
 export const Route = createFileRoute("/companies/$slug")({
   head: ({ params }) => ({
@@ -18,6 +19,26 @@ export const Route = createFileRoute("/companies/$slug")({
   }),
   component: CompanyPage,
 });
+
+function CompanyLogoBlock({ company }: { company: { name: string; logo?: string | null; logo_verified?: boolean | null; website?: string | null } }) {
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const explicit = company.logo && company.logo_verified ? company.logo : null;
+  const automatic = companyLogoUrl(company);
+  const source = sourceIndex === 0 ? explicit : sourceIndex === 1 ? automatic : null;
+
+  if (!source) return null;
+
+  return (
+    <div className="mb-6 flex size-28 items-center justify-center rounded-xl border border-border bg-card p-3 shadow-card">
+      <img
+        src={source}
+        alt={company.name + " company logo"}
+        className="max-h-full max-w-full object-contain"
+        onError={() => setSourceIndex((current) => current + 1)}
+      />
+    </div>
+  );
+}
 
 function CompanyPage() {
   const { slug } = Route.useParams();
@@ -35,6 +56,9 @@ function CompanyPage() {
         {...(company?.description ? { subtitle: company.description } : {})}
       />
       <div className="container-page py-12">
+        {company ? (
+          <CompanyLogoBlock company={company} />
+        ) : null}
         {company ? (
           <div className="mb-10 grid gap-4 rounded-xl border border-border bg-card p-6 shadow-card sm:grid-cols-2 lg:grid-cols-3">
             {company.city || company.country ? (
