@@ -23,3 +23,12 @@ COMMENT ON COLUMN public.companies.logo_verified IS
 
 -- Do not assign a logo by matching a company name. The app resolves the
 -- logo from the company's official website domain instead.
+
+-- Research check: Care Plus Group's own site and NHS job records identify the
+-- organisation at Grimsby, North East Lincolnshire, not Manchester.
+UPDATE public.companies
+SET country = 'United Kingdom',
+    city = 'Grimsby',
+    website = 'https://careplusgroup.org/'
+WHERE slug = 'careplus-group'
+  AND city = 'Manchester';
