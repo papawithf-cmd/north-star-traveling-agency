@@ -127,9 +127,11 @@ function normalizeSlug(slug: string) {
 export function mediaUrl(path?: string | null) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path) || path.startsWith("/") || path.startsWith("data:")) return path;
-  const base = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
-  if (!base) return `/api/public/media/${path}`;
-  return `${base}/storage/v1/object/public/site-images/${path.replace(/^\/+/, "")}`;
+  // Values under src/assets are bundled app assets, not storage objects.
+  if (path.startsWith("src/assets/")) return null;
+  // Serve stored media through the app's verified server route. This works
+  // whether or not the Supabase bucket is configured for public reads.
+  return `/api/public/media/${path.replace(/^\/+/, "")}`;
 }
 
 /**
