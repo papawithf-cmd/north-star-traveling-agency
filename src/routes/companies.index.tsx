@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { BadgeCheck, Building2, MapPin } from "lucide-react";
 
 import { PageHeader, SiteLayout } from "@/components/site/SiteLayout";
@@ -20,6 +21,27 @@ export const Route = createFileRoute("/companies/")({
   }),
   component: CompaniesPage,
 });
+
+function CompanyLogo({ logo, name }: { logo?: string | null; name: string }) {
+  const [failed, setFailed] = useState(false);
+  if (!logo || failed) {
+    return (
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <Building2 className="size-5" />
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={logo}
+      alt={name + " official logo"}
+      className="size-12 shrink-0 rounded-lg border border-border bg-white object-contain p-1"
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
 function CompaniesPage() {
   const { data: companies = [] } = useQuery({ queryKey: ["companies"], queryFn: fetchCompanies });
@@ -47,13 +69,7 @@ function CompaniesPage() {
                   className="rounded-xl border border-border bg-card p-6 shadow-card transition-all hover:-translate-y-1 hover:shadow-lift"
                 >
                   <div className="flex items-center gap-3">
-                    {c.logo ? (
-                      <img src={c.logo} alt={c.name} className="size-12 rounded-lg object-cover" loading="lazy" />
-                    ) : (
-                      <span className="flex size-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Building2 className="size-5" />
-                      </span>
-                    )}
+                    <CompanyLogo logo={c.logo_verified ? c.logo : null} name={c.name} />
                     <div>
                       <h2 className="font-display text-base font-bold">{c.name}</h2>
                       {c.industry ? <p className="text-xs text-muted-foreground">{c.industry}</p> : null}
