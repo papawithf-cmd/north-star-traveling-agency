@@ -17,16 +17,75 @@ jobs:
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
-      - name: Install Chromium
-        run: bunx playwright install --with-deps chromium
-      - name: Wait for Vercel and test live Opportunities
+      - name: Install Playwright Chromium
         run: |
-          set -euo pipefail
-          for attempt in $(seq 1 30); do
-            if bunx playwright test --config=playwright.config.cjs 2>/tmp/pw.err; then
-              exit 0
-            fi
-            cat /tmp/pw.err
-            sleep 10
-          done
-          exit 1
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Test live Opportunities end to end
+        run: |
+          node <<'NODE'
+          const { chromium } = require("playwright");
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+
+            const restored = [
+              ["Cabin Crew Opportunities", "northstar-emirates-cabin-crew"],
+              ["Cabin Services Assistant", "northstar-emirates-cabin-services-assistant"],
+              ["Fulfilment Associate", "northstar-amazon-fulfilment-associate"],
+            ];
+
+            const waitForOpportunity = async (title, slug) => {
+              for (let attempt = 1; attempt <= 12; attempt++) {
+                await page.goto("https://north-star-traveling-agency.vercel.app/opportunities", {
+                  waitUntil: "domcontentloaded",
+                  timeout: 60000,
+                });
+
+                try {
+                  await page.locator(`a[href="/opportunities/${slug}"]`).first().waitFor({ state: "visible", timeout: 5000 });
+                  await page.getByText(title, { exact: true }).first().waitFor({ state: "visible", timeout: 5000 });
+                  return;
+                } catch {
+                  await new Promise((resolve) => setTimeout(resolve, 5000));
+                }
+              }
+              throw new Error(`Restored opportunity did not appear: ${title}`);
+            };
+
+            for (const [title, slug] of restored) {
+              await waitForOpportunity(title, slug);
+            }
+
+            for (const [title, slug] of restored) {
+              await page.goto("https://north-star-traveling-agency.vercel.app/opportunities", {
+                waitUntil: "domcontentloaded",
+                timeout: 60000,
+              });
+              await page.locator(`a[href="/opportunities/${slug}"]`).first().click();
+              await page.waitForLoadState("domcontentloaded");
+              if (!page.url().endsWith(`/opportunities/${slug}`)) {
+                throw new Error(`Detail URL did not open for ${title}`);
+              }
+              await page.locator("h1").first().filter({ hasText: title }).waitFor({ state: "visible", timeout: 30000 });
+            }
+
+            await page.goto("https://north-star-traveling-agency.vercel.app/opportunities", {
+              waitUntil: "domcontentloaded",
+              timeout: 60000,
+            });
+            await page.reload({ waitUntil: "domcontentloaded", timeout: 60000 });
+
+            for (const [title, slug] of restored) {
+              await page.locator(`a[href="/opportunities/${slug}"]`).first().waitFor({ state: "visible", timeout: 30000 });
+              await page.getByText(title, { exact: true }).first().waitFor({ state: "visible", timeout: 30000 });
+            }
+
+            console.log("LIVE BROWSER TEST PASSED");
+            await browser.close();
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
