@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 
-// Production restore path: invoked before public opportunity reads. Re-verified by live browser test.
+// Production restore path: invoked before public opportunity reads. Live browser verification harness corrected.
 
 const CATEGORIES = [
   ["Aviation", "aviation", "Cabin crew, airport operations and aviation opportunities.", "src/assets/cat-air-hostess.jpg", 10],
