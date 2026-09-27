@@ -27,19 +27,16 @@ export async function uploadSiteImage(file: File, folder: string) {
     }
     throw new Error(`Upload failed: ${error.message}`);
   }
-  const { data: publicData } = supabase.storage.from("site-images").getPublicUrl(path);
-  const publicUrl = publicData.publicUrl;
-  if (!publicUrl) throw new Error("Image uploaded but no public image URL was returned");
-
+  const previewUrl = `/api/public/media/${path}`;
   await new Promise<void>((resolve, reject) => {
     const probe = new Image();
     probe.onload = () => resolve();
     probe.onerror = () =>
-      reject(new Error("The image uploaded, but the saved image URL could not be loaded. Please try again."));
-    probe.src = publicUrl;
+      reject(new Error("The image uploaded, but the website could not display the saved image. Please try again."));
+    probe.src = previewUrl;
   });
 
-  return publicUrl;
+  return path;
 }
 
 type Props = {
