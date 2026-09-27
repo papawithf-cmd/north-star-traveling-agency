@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+// Temporary production verification hook; remove after successful restore.
+
 export const Route = createFileRoute("/api/restore-opportunities")({
   server: {
     handlers: {
