@@ -55,15 +55,12 @@ const fallbackImages: Record<string, string> = {
   airmen: airmen,
   "ground-crew": groundCrew,
   caregivers: caregivers,
-  caregiving: caregivers,
-  "care-giver": caregivers,
   security: security,
   "private-courier": courier,
   courier: courier,
   delivery: delivery,
   "delivery-companies": delivery,
   drivers: drivers,
-  driving: drivers,
   driver: drivers,
   chauffeur: drivers,
   "truck-drivers": drivers,
@@ -72,8 +69,7 @@ const fallbackImages: Record<string, string> = {
   restaurant: restaurant,
   "restaurant-food": restaurant,
   "food-shop": restaurant,
-  hospitality: hospitalityHotels,
-  "hotel-hospitality": hospitalityHotels,
+  hospitality: restaurant,
   "nursing-healthcare": nursing,
   nursing: nursing,
   healthcare: nursing,
@@ -137,6 +133,36 @@ export function mediaUrl(path?: string | null) {
 }
 
 /**
+ * Resolve a company logo without guessing from the company name.
+ * Priority:
+ * 1) an explicitly verified logo stored by an admin;
+ * 2) a logo resolved from the company's own official website domain.
+ *
+ * Logo.dev/Clearbit is not used: Clearbit's public logo API was sunset in 2025.
+ * Hunter's logo API is currently available without an API key and resolves a
+ * logo from the supplied domain.
+ */
+export function companyLogoUrl(company: {
+  logo?: string | null;
+  logo_verified?: boolean | null;
+  website?: string | null;
+}) {
+  if (company.logo && company.logo_verified) return company.logo;
+
+  const website = company.website?.trim();
+  if (!website) return null;
+
+  try {
+    const normalized = /^https?:\/\//i.test(website) ? website : `https://${website}`;
+    const hostname = new URL(normalized).hostname.replace(/^www\./i, "");
+    if (!hostname) return null;
+    return `https://logos.hunter.io/${hostname}`;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Returns an error message when a pasted link is a share/viewer page instead of a
  * direct image file (e.g. share.google, Google Photos/Drive links), otherwise null.
  */
@@ -151,18 +177,13 @@ export function imageUrlProblem(url: string) {
 }
 
 export function categoryImage(slug?: string | null, custom?: string | null) {
-  // Prefer an opportunity-specific stored image. Category artwork is only the
-  // fallback when the opportunity has no saved gallery image.
   const resolved = mediaUrl(custom);
   if (resolved) return resolved;
-
   if (slug) {
-    const normalized = normalizeSlug(slug);
-    const match = fallbackImages[normalized];
+    const match = fallbackImages[normalizeSlug(slug)];
     if (match) return match;
   }
-
-  // Only truly unknown categories use the neutral fallback.
+  // Unknown categories get a neutral default instead of an unrelated photo.
   return gallery[0]!;
 }
 
