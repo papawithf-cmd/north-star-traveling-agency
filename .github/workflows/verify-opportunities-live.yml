@@ -1,0 +1,32 @@
+name: Verify restored opportunities on live site
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - src/lib/restore-original-opportunities.functions.ts
+      - src/lib/site.ts
+      - src/routes/opportunities.index.tsx
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Install Chromium
+        run: bunx playwright install --with-deps chromium
+      - name: Wait for Vercel and test live Opportunities
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            if bunx playwright test --config=playwright.config.cjs 2>/tmp/pw.err; then
+              exit 0
+            fi
+            cat /tmp/pw.err
+            sleep 10
+          done
+          exit 1
