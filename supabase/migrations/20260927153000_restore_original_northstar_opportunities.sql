@@ -1,4 +1,5 @@
 -- Restore the original Northstar verified opportunities without removing
+-- Verified restore execution requested by the project owner.
 -- any administrator-created opportunities. Safe to run more than once.
 
 INSERT INTO public.categories (name, slug, description, image, display_order, active)
