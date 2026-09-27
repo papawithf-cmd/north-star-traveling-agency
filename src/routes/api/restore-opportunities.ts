@@ -7,8 +7,8 @@ export const Route = createFileRoute("/api/restore-opportunities")({
     handlers: {
       GET: async () => {
         try {
-          const { restoreOriginalOpportunities } = await import("@/lib/restore-original-opportunities.functions");
-          const result = await restoreOriginalOpportunities();
+          const { restoreOriginalOpportunitiesServer } = await import("@/lib/restore-original-opportunities.functions");
+          const result = await restoreOriginalOpportunitiesServer();
           return Response.json({ ok: true, ...result });
         } catch (error) {
           console.error("[restore-opportunities]", error);
