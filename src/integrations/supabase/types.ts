@@ -187,6 +187,7 @@ export type Database = {
           id: string
           industry: string | null
           logo: string | null
+          logo_verified: boolean
           name: string
           phone: string | null
           slug: string
@@ -205,6 +206,7 @@ export type Database = {
           id?: string
           industry?: string | null
           logo?: string | null
+          logo_verified?: boolean
           name: string
           phone?: string | null
           slug: string
@@ -223,6 +225,7 @@ export type Database = {
           id?: string
           industry?: string | null
           logo?: string | null
+          logo_verified?: boolean
           name?: string
           phone?: string | null
           slug?: string
