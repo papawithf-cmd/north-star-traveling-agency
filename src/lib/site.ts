@@ -137,6 +137,36 @@ export function mediaUrl(path?: string | null) {
 }
 
 /**
+ * Resolve a company logo without guessing from the company name.
+ * Priority:
+ * 1) an explicitly verified logo stored by an admin;
+ * 2) a logo resolved from the company's own official website domain.
+ *
+ * Logo.dev/Clearbit is not used: Clearbit's public logo API was sunset in 2025.
+ * Hunter's logo API is currently available without an API key and resolves a
+ * logo from the supplied domain.
+ */
+export function companyLogoUrl(company: {
+  logo?: string | null;
+  logo_verified?: boolean | null;
+  website?: string | null;
+}) {
+  if (company.logo && company.logo_verified) return company.logo;
+
+  const website = company.website?.trim();
+  if (!website) return null;
+
+  try {
+    const normalized = /^https?:\/\//i.test(website) ? website : `https://${website}`;
+    const hostname = new URL(normalized).hostname.replace(/^www\./i, "");
+    if (!hostname) return null;
+    return `https://logos.hunter.io/${hostname}`;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Returns an error message when a pasted link is a share/viewer page instead of a
  * direct image file (e.g. share.google, Google Photos/Drive links), otherwise null.
  */
