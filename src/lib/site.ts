@@ -55,12 +55,15 @@ const fallbackImages: Record<string, string> = {
   airmen: airmen,
   "ground-crew": groundCrew,
   caregivers: caregivers,
+  caregiving: caregivers,
+  "care-giver": caregivers,
   security: security,
   "private-courier": courier,
   courier: courier,
   delivery: delivery,
   "delivery-companies": delivery,
   drivers: drivers,
+  driving: drivers,
   driver: drivers,
   chauffeur: drivers,
   "truck-drivers": drivers,
@@ -69,7 +72,8 @@ const fallbackImages: Record<string, string> = {
   restaurant: restaurant,
   "restaurant-food": restaurant,
   "food-shop": restaurant,
-  hospitality: restaurant,
+  hospitality: hospitalityHotels,
+  "hotel-hospitality": hospitalityHotels,
   "nursing-healthcare": nursing,
   nursing: nursing,
   healthcare: nursing,
@@ -147,13 +151,18 @@ export function imageUrlProblem(url: string) {
 }
 
 export function categoryImage(slug?: string | null, custom?: string | null) {
+  // Prefer an opportunity-specific stored image. Category artwork is only the
+  // fallback when the opportunity has no saved gallery image.
   const resolved = mediaUrl(custom);
   if (resolved) return resolved;
+
   if (slug) {
-    const match = fallbackImages[normalizeSlug(slug)];
+    const normalized = normalizeSlug(slug);
+    const match = fallbackImages[normalized];
     if (match) return match;
   }
-  // Unknown categories get a neutral default instead of an unrelated photo.
+
+  // Only truly unknown categories use the neutral fallback.
   return gallery[0]!;
 }
 
