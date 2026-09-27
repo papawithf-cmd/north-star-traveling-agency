@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+// Keep remote imports bounded so the admin tool stays predictable.
 const MAX_BYTES = 5 * 1024 * 1024;
 const ACCEPTED_TYPES = new Map([
   ["image/jpeg", "jpg"],
