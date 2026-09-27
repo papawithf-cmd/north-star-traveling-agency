@@ -117,6 +117,7 @@ function OpportunityEditor() {
   const [recordId, setRecordId] = useState<string | null>(isNew ? null : id);
   const [note, setNote] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [imageUrlStatus, setImageUrlStatus] = useState<"idle" | "loading" | "valid" | "invalid">("idle");
   const dirty = useRef(false);
 
   const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
@@ -256,6 +257,19 @@ function OpportunityEditor() {
         const problem = imageUrlProblem(value.startsWith("opportunities/") ? "" : value);
         if (problem) throw new Error(problem);
         if (images.length >= 6) throw new Error("Maximum of 6 images");
+
+        // External URLs must be real browser-loadable images before we store them.
+        // This prevents a broken thumbnail from being saved into the opportunity.
+        if (/^https?:\/\//i.test(value)) {
+          await new Promise<void>((resolve, reject) => {
+            const probe = new Image();
+            probe.onload = () => resolve();
+            probe.onerror = () =>
+              reject(new Error("This image URL could not be loaded. Paste a direct JPG, PNG or WebP image URL, or use Upload image."));
+            probe.src = value;
+          });
+        }
+
         const { error } = await supabase.from("opportunity_images").insert({
           opportunity_id: recordId!,
           image_url: value,
@@ -264,6 +278,7 @@ function OpportunityEditor() {
         } as never);
         if (error) throw error;
         setImageUrl("");
+        setImageUrlStatus("idle");
         return;
       }
       if (action.type === "remove") {
@@ -462,21 +477,73 @@ function OpportunityEditor() {
                     }}
                   />
                 </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Input
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="…or paste an image URL"
-                    className="max-w-md"
-                  />
+                <div className="mt-4 flex flex-wrap items-end gap-2">
+                  <div className="min-w-0 flex-1">
+                    <Label htmlFor="external-image-url">Image URL</Label>
+                    <Input
+                      id="external-image-url"
+                      value={imageUrl}
+                      onChange={(e) => {
+                        const value = e.target.value.trim();
+                        setImageUrl(value);
+                        if (!value) {
+                          setImageUrlStatus("idle");
+                          return;
+                        }
+                        if (imageUrlProblem(value)) {
+                          setImageUrlStatus("invalid");
+                          return;
+                        }
+                        setImageUrlStatus("loading");
+                        const probe = new Image();
+                        probe.onload = () => {
+                          setImageUrlStatus("valid");
+                        };
+                        probe.onerror = () => {
+                          setImageUrlStatus("invalid");
+                        };
+                        probe.src = value;
+                      }}
+                      placeholder="https://example.com/image.jpg"
+                      className="mt-1.5 max-w-md"
+                    />
+                  </div>
                   <Button
                     onClick={() => imageMutation.mutate({ type: "add", path: imageUrl })}
-                    disabled={images.length >= 6}
+                    disabled={images.length >= 6 || !imageUrl.trim() || imageUrlStatus !== "valid" || imageMutation.isPending}
                   >
                     Add image
                   </Button>
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">Up to 6 images. The first image is the main image.</p>
+
+                {imageUrlStatus !== "idle" && imageUrl.trim() ? (
+                  <div className="mt-3 max-w-md overflow-hidden rounded-lg border border-border bg-muted/30">
+                    {imageUrlStatus === "valid" ? (
+                      <>
+                        <img
+                          src={imageUrl}
+                          alt="Image URL preview"
+                          className="h-44 w-full object-cover"
+                        />
+                        <p className="px-3 py-2 text-xs text-green-700 dark:text-green-400">
+                          Image preview looks good. You can add it before publishing.
+                        </p>
+                      </>
+                    ) : imageUrlStatus === "loading" ? (
+                      <div className="flex h-28 items-center justify-center text-sm text-muted-foreground">
+                        Checking image URL…
+                      </div>
+                    ) : (
+                      <div className="px-3 py-3 text-sm text-destructive">
+                        This URL is not returning a usable image. Use the direct image URL or click <strong>Upload image</strong>.
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Paste a direct JPG, JPEG, PNG or WebP image link. The preview must load before the image can be added.
+                </p>
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {images.map((img, index) => (
                     <div key={img.id} className="overflow-hidden rounded-lg border border-border">
