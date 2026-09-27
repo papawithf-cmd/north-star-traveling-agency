@@ -40,6 +40,68 @@ ON CONFLICT (slug) DO UPDATE SET
   industry = EXCLUDED.industry,
   verified = true;
 
+INSERT INTO public.companies (name, slug, description, country, city, industry, verified)
+VALUES
+  ('Horizon Air Services','horizon-air-services','Regional airline services provider.','United Arab Emirates','Dubai','Aviation',true),
+  ('CarePlus Group','careplus-group','Home care and assisted living provider.','United Kingdom','Manchester','Healthcare',true)
+ON CONFLICT (slug) DO UPDATE SET
+  name = EXCLUDED.name,
+  description = EXCLUDED.description,
+  country = EXCLUDED.country,
+  city = EXCLUDED.city,
+  industry = EXCLUDED.industry,
+  verified = true;
+
+INSERT INTO public.opportunities (
+  title, slug, category_id, company_id, description, responsibilities, location, country, city,
+  employment_type, duration, salary, currency, vacancies, deadline, application_method, status, featured, urgent, verified, published_at
+)
+SELECT
+  v.title, v.slug, c.id, co.id, v.description, v.responsibilities, v.location, v.country, v.city,
+  v.employment_type, v.duration, v.salary, v.currency, v.vacancies, v.deadline::date,
+  'email', 'published', v.featured, v.urgent, true, now()
+FROM (VALUES
+  ('Cabin Crew — International Routes','cabin-crew-international-routes',
+   'air-hostess','horizon-air-services',
+   'Join a growing international cabin crew team serving long-haul and regional routes.',
+   'Ensure passenger safety and comfort; deliver inflight service; complete pre-flight checks.',
+   'Dubai International Airport','United Arab Emirates','Dubai','Full-time','2 year contract',
+   '2,500 - 3,200','USD',12,(now() + interval '45 days')::date,true,false,'email'),
+
+  ('Live-in Caregiver','live-in-caregiver',
+   'caregivers','careplus-group',
+   'Provide compassionate daily support to elderly clients in a live-in arrangement.',
+   'Personal care assistance; medication reminders; meal preparation; companionship.',
+   'Manchester','United Kingdom','Manchester','Full-time','12 months',
+   '1,900 - 2,300','GBP',6,(now() + interval '30 days')::date,true,true,'email')
+) AS v(
+  title, slug, category_slug, company_slug, description, responsibilities, location, country, city,
+  employment_type, duration, salary, currency, vacancies, deadline, featured, urgent, application_method
+)
+JOIN public.categories c ON c.slug = v.category_slug
+JOIN public.companies co ON co.slug = v.company_slug
+ON CONFLICT (slug) DO UPDATE SET
+  title = EXCLUDED.title,
+  category_id = EXCLUDED.category_id,
+  company_id = EXCLUDED.company_id,
+  description = EXCLUDED.description,
+  responsibilities = EXCLUDED.responsibilities,
+  location = EXCLUDED.location,
+  country = EXCLUDED.country,
+  city = EXCLUDED.city,
+  employment_type = EXCLUDED.employment_type,
+  duration = EXCLUDED.duration,
+  salary = EXCLUDED.salary,
+  currency = EXCLUDED.currency,
+  vacancies = EXCLUDED.vacancies,
+  deadline = EXCLUDED.deadline,
+  application_method = 'email',
+  status = 'published',
+  featured = EXCLUDED.featured,
+  urgent = EXCLUDED.urgent,
+  verified = true,
+  published_at = COALESCE(public.opportunities.published_at, now());
+
 INSERT INTO public.opportunities (
   title, slug, category_id, company_id, description, responsibilities, requirements,
   qualifications, location, country, city, employment_type, duration, salary, currency,
