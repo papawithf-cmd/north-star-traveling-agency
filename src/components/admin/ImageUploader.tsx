@@ -59,8 +59,9 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
   const [busy, setBusy] = useState(false);
 
   const current = mediaUrl(value);
+  const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
   const [currentImageError, setCurrentImageError] = useState(false);
-  const shown = preview ?? current;
+  const shown = preview ?? fallbackUrl ?? current;
 
   function pick(file?: File | null) {
     if (!file) return;
@@ -72,6 +73,7 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
       toast.error("Image must be 5MB or smaller");
       return;
     }
+    setFallbackUrl(null);
     setCurrentImageError(false);
     setPending(file);
     setPreview(URL.createObjectURL(file));
@@ -87,10 +89,10 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
     if (!pending) return;
     setBusy(true);
     try {
-      const path = await uploadSiteImage(pending, folder);
-      onChange(path);
+      const url = await uploadSiteImage(pending, folder);
+      onChange(url);
       cancel();
-      toast.success("Image uploaded");
+      toast.success("Image uploaded and verified");
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -113,17 +115,17 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
                 setCurrentImageError(true);
                 return;
               }
-              if (value && !/^https?:\/\//i.test(value) && !value.startsWith("data:")) {
-                const fallback = `/api/public/media/${value.replace(/^\/+/, "")}`;
-                const probe = new Image();
-                probe.onload = () => {
-                  setCurrentImageError(false);
-                };
-                probe.onerror = () => setCurrentImageError(true);
-                probe.src = fallback;
-              } else {
-                setCurrentImageError(true);
+              if (
+                !fallbackUrl &&
+                value &&
+                !/^https?:\/\//i.test(value) &&
+                !value.startsWith("data:")
+              ) {
+                setFallbackUrl(`/api/public/media/${value.replace(/^\/+/, "")}`);
+                setCurrentImageError(false);
+                return;
               }
+              setCurrentImageError(true);
             }}
           />
         ) : (
