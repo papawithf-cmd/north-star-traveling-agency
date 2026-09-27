@@ -547,7 +547,35 @@ function OpportunityEditor() {
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {images.map((img, index) => (
                     <div key={img.id} className="overflow-hidden rounded-lg border border-border">
-                      <img src={mediaUrl(img.image_url) ?? img.image_url} alt={img.caption ?? `Image ${index + 1}`} className="h-40 w-full object-cover" />
+                      <img
+                        src={mediaUrl(img.image_url) ?? img.image_url}
+                        alt={img.caption ?? `Image ${index + 1}`}
+                        className="h-40 w-full object-cover"
+                        onError={(event) => {
+                          const original = String(img.image_url ?? "");
+                          if (
+                            event.currentTarget.dataset.fallbackApplied !== "true" &&
+                            original &&
+                            !/^https?:\/\//i.test(original) &&
+                            !original.startsWith("data:")
+                          ) {
+                            event.currentTarget.dataset.fallbackApplied = "true";
+                            event.currentTarget.src = `/api/public/media/${original.replace(/^\/+/, "")}`;
+                            return;
+                          }
+
+                          event.currentTarget.style.display = "none";
+                          const parent = event.currentTarget.parentElement;
+                          if (parent && !parent.querySelector("[data-image-error]")) {
+                            const error = document.createElement("div");
+                            error.dataset.imageError = "true";
+                            error.className =
+                              "flex h-40 items-center justify-center px-4 text-center text-xs text-muted-foreground";
+                            error.textContent = "Image could not be loaded. Please upload it again.";
+                            parent.insertBefore(error, event.currentTarget);
+                          }
+                        }}
+                      />
                       <div className="flex items-center justify-between gap-1 p-2">
                         <span className="text-xs text-muted-foreground">
                           {index === 0 ? "Main image" : `Image ${index + 1}`}
