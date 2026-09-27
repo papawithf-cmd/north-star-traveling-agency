@@ -21,8 +21,11 @@ jobs:
         run: |
           set -e
           url="https://vjcopvvprgodsnvqjyzo.supabase.co/storage/v1/object/public/site-images/opportunities/81bd896c-7d87-4c59-8443-f9e381a30d0a/1790509148900-flh1wi.png"
-          curl -fsSLI "$url"
-          curl -fsSL "$url" -o /tmp/opportunity-image.png
-          file /tmp/opportunity-image.png | grep -E "PNG image data|JPEG image data|Web/P image data"
+          echo "=== Supabase public object response ==="
+          curl -sS -D /tmp/headers.txt "$url" -o /tmp/response.body || true
+          cat /tmp/headers.txt
+          cat /tmp/response.body
+          echo
+          test "$(head -n 1 /tmp/headers.txt | tr -d '\r')" = "HTTP/2 200"
       - name: Build application
         run: bun run build
