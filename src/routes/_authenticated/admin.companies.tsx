@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Pencil, Trash2 } from "lucide-react";
+import { Building2, Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchCompanies, slugify } from "@/lib/site";
+import { fetchCompanies, imageUrlProblem, slugify } from "@/lib/site";
 
 export const Route = createFileRoute("/_authenticated/admin/companies")({
   component: AdminCompanies,
@@ -21,6 +21,7 @@ type Form = {
   name: string;
   slug: string;
   logo: string;
+  logoVerified: boolean;
   description: string;
   industry: string;
   country: string;
@@ -37,6 +38,7 @@ const empty: Form = {
   name: "",
   slug: "",
   logo: "",
+  logoVerified: false,
   description: "",
   industry: "",
   country: "",
@@ -49,7 +51,7 @@ const empty: Form = {
   verified: false,
 };
 
-const fields: { key: "industry" | "country" | "city" | "address" | "website" | "email" | "phone" | "whatsapp" | "logo"; label: string }[] = [
+const fields: { key: "industry" | "country" | "city" | "address" | "website" | "email" | "phone" | "whatsapp"; label: string }[] = [
   { key: "industry", label: "Industry" },
   { key: "country", label: "Country" },
   { key: "city", label: "City" },
@@ -58,20 +60,32 @@ const fields: { key: "industry" | "country" | "city" | "address" | "website" | "
   { key: "email", label: "Email" },
   { key: "phone", label: "Phone" },
   { key: "whatsapp", label: "WhatsApp" },
-  { key: "logo", label: "Logo URL" },
 ];
 
 function AdminCompanies() {
   const queryClient = useQueryClient();
   const [form, setForm] = useState<Form>(empty);
+  const [logoPreviewStatus, setLogoPreviewStatus] = useState<"idle" | "loading" | "valid" | "invalid">("idle");
   const { data: companies = [] } = useQuery({ queryKey: ["companies"], queryFn: fetchCompanies });
 
   const save = useMutation({
     mutationFn: async (value: Form) => {
+      const logo = value.logo.trim();
+      if (!logo) throw new Error("Add the company's official logo image URL.");
+      const logoProblem = imageUrlProblem(logo);
+      if (logoProblem) throw new Error(logoProblem);
+      if (!value.logoVerified) {
+        throw new Error("Verify the logo against the company's official website before saving.");
+      }
+      if (logoPreviewStatus === "invalid") {
+        throw new Error("The logo image could not be loaded. Check the URL and use the company's real logo.");
+      }
+
       const payload = {
         name: value.name,
         slug: value.slug || slugify(value.name),
-        logo: value.logo || null,
+        logo,
+        logo_verified: true,
         description: value.description || null,
         industry: value.industry || null,
         country: value.country || null,
@@ -91,6 +105,7 @@ function AdminCompanies() {
     onSuccess: () => {
       toast.success("Company saved");
       setForm(empty);
+      setLogoPreviewStatus("idle");
       queryClient.invalidateQueries({ queryKey: ["companies"] });
       queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
     },
@@ -141,6 +156,44 @@ function AdminCompanies() {
             <Label htmlFor="co-desc">Description</Label>
             <Textarea id="co-desc" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1.5" />
           </div>
+          <div>
+            <Label htmlFor="co-logo">Official Logo URL</Label>
+            <Input
+              id="co-logo"
+              type="url"
+              required
+              placeholder="https://official-company-site.com/logo.svg"
+              value={form.logo}
+              onChange={(e) => {
+                setLogoPreviewStatus(e.target.value.trim() ? "loading" : "idle");
+                setForm({ ...form, logo: e.target.value });
+              }}
+              className="mt-1.5"
+            />
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              Use the company's real logo from its official website or official brand/media page. We never guess logos from company names.
+            </p>
+            {form.logo ? (
+              <div className="mt-3 rounded-lg border border-border bg-muted/20 p-3">
+                <div className="flex min-h-20 items-center justify-center">
+                  <img
+                    src={form.logo}
+                    alt={form.name ? form.name + " logo preview" : "Company logo preview"}
+                    className="max-h-20 max-w-full object-contain"
+                    onLoad={() => setLogoPreviewStatus("valid")}
+                    onError={() => setLogoPreviewStatus("invalid")}
+                  />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {logoPreviewStatus === "valid"
+                    ? "Logo image loaded."
+                    : logoPreviewStatus === "invalid"
+                      ? "Logo image could not be loaded. Use a direct image URL."
+                      : "Checking logo image…"}
+                </p>
+              </div>
+            ) : null}
+          </div>
           {fields.map((f) => (
             <div key={f.key}>
               <Label htmlFor={`co-${f.key}`}>{f.label}</Label>
@@ -153,6 +206,13 @@ function AdminCompanies() {
             </div>
           ))}
           <div className="flex items-center gap-3">
+            <Switch id="co-logo-verified" checked={form.logoVerified} onCheckedChange={(v) => setForm({ ...form, logoVerified: v })} />
+            <Label htmlFor="co-logo-verified">Official logo verified</Label>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Saving a company requires this confirmation so an unverified or guessed logo never appears publicly.
+          </p>
+                    <div className="flex items-center gap-3">
             <Switch id="co-verified" checked={form.verified} onCheckedChange={(v) => setForm({ ...form, verified: v })} />
             <Label htmlFor="co-verified">Verified employer</Label>
           </div>
@@ -161,7 +221,7 @@ function AdminCompanies() {
               {form.id ? "Update" : "Create"}
             </Button>
             {form.id ? (
-              <Button type="button" variant="outline" onClick={() => setForm(empty)}>
+              <Button type="button" variant="outline" onClick={() => { setForm(empty); setLogoPreviewStatus("idle"); }}>
                 Cancel
               </Button>
             ) : null}
@@ -182,7 +242,18 @@ function AdminCompanies() {
             <tbody>
               {companies.map((c) => (
                 <tr key={c.id} className="border-t border-border">
-                  <td className="px-4 py-3 font-medium">{c.name}</td>
+                  <td className="px-4 py-3 font-medium">
+                    <div className="flex items-center gap-2.5">
+                      {c.logo && c.logo_verified ? (
+                        <img src={c.logo} alt="" className="size-9 rounded-md border border-border bg-white object-contain" />
+                      ) : (
+                        <span className="flex size-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                          <Building2 className="size-4" />
+                        </span>
+                      )}
+                      <span>{c.name}</span>
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">{[c.city, c.country].filter(Boolean).join(", ") || "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground">{c.email ?? c.phone ?? "—"}</td>
                   <td className="px-4 py-3 text-muted-foreground">{c.verified ? "Yes" : "No"}</td>
@@ -193,11 +264,13 @@ function AdminCompanies() {
                         size="icon"
                         aria-label="Edit"
                         onClick={() =>
+                          setLogoPreviewStatus(c.logo ? "loading" : "idle");
                           setForm({
                             id: c.id,
                             name: c.name,
                             slug: c.slug,
                             logo: c.logo ?? "",
+                            logoVerified: Boolean(c.logo_verified),
                             description: c.description ?? "",
                             industry: c.industry ?? "",
                             country: c.country ?? "",
