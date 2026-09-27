@@ -127,10 +127,17 @@ function normalizeSlug(slug: string) {
 export function mediaUrl(path?: string | null) {
   if (!path) return null;
   if (/^https?:\/\//i.test(path) || path.startsWith("/") || path.startsWith("data:")) return path;
-  // Values under src/assets are bundled app assets, not storage objects.
   if (path.startsWith("src/assets/")) return null;
-  // Serve stored media through the app's verified server route. This works
-  // whether or not the Supabase bucket is configured for public reads.
+
+  // Uploaded opportunity images live in the public site-images bucket.
+  // Use the public object URL directly for browser rendering.
+  const base = import.meta.env["VITE_SUPABASE_URL"] as string | undefined;
+  if (base) {
+    return `${base.replace(/\/$/, "")}/storage/v1/object/public/site-images/${path.replace(/^\/+/, "")}`;
+  }
+
+  // Keep the application media endpoint as a fallback for deployments where
+  // the VITE Supabase URL is unavailable at build time.
   return `/api/public/media/${path.replace(/^\/+/, "")}`;
 }
 
