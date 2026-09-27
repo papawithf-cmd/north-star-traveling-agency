@@ -23,18 +23,12 @@ export async function uploadSiteImage(file: File, folder: string) {
     .upload(path, file, { contentType: file.type, upsert: false });
   if (error) {
     if (/bucket not found/i.test(error.message)) {
-      throw new Error("Image storage is not set up yet. Please run the storage setup once, then try again.");
+      throw new Error(
+        "Image storage is not set up yet. Please run the storage setup once, then try again.",
+      );
     }
     throw new Error(`Upload failed: ${error.message}`);
   }
-  const previewUrl = `/api/public/media/${path}`;
-  await new Promise<void>((resolve, reject) => {
-    const probe = new Image();
-    probe.onload = () => resolve();
-    probe.onerror = () =>
-      reject(new Error("The image uploaded, but the website could not display the saved image. Please try again."));
-    probe.src = previewUrl;
-  });
 
   return path;
 }
@@ -89,7 +83,7 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
       const url = await uploadSiteImage(pending, folder);
       onChange(url);
       cancel();
-      toast.success("Image uploaded and verified");
+      toast.success("Image uploaded");
     } catch (e) {
       toast.error((e as Error).message);
     } finally {

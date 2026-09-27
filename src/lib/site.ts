@@ -129,9 +129,7 @@ export function mediaUrl(path?: string | null) {
   if (/^https?:\/\//i.test(path) || path.startsWith("/") || path.startsWith("data:")) return path;
   // Values under src/assets are bundled app assets, not storage objects.
   if (path.startsWith("src/assets/")) return null;
-  // Serve stored media through the app's verified server route. This works
-  // whether or not the Supabase bucket is configured for public reads.
-  return `/api/public/media/${path.replace(/^\/+/, "")}`;
+  return supabase.storage.from("site-images").getPublicUrl(path.replace(/^\/+/, "")).data.publicUrl;
 }
 
 /**
