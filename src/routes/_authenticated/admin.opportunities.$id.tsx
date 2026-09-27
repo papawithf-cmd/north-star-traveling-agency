@@ -32,6 +32,7 @@ import {
   uniqueOpportunitySlug,
 } from "@/lib/site";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { importOpportunityImage, resolveOpportunityImage } from "@/lib/opportunity-images.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/opportunities/$id")({
   component: OpportunityEditor,
@@ -117,6 +118,7 @@ function OpportunityEditor() {
   const [recordId, setRecordId] = useState<string | null>(isNew ? null : id);
   const [note, setNote] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [resolvedImageUrl, setResolvedImageUrl] = useState("");
   const [imageUrlStatus, setImageUrlStatus] = useState<"idle" | "loading" | "valid" | "invalid">("idle");
   const dirty = useRef(false);
 
@@ -164,6 +166,31 @@ function OpportunityEditor() {
   useEffect(() => {
     if (record) setForm(record);
   }, [record]);
+
+  // Resolve both direct image URLs and ordinary webpage URLs (for example,
+  // a page from an image library) into a real image URL for the live preview.
+  useEffect(() => {
+    const value = imageUrl.trim();
+    setResolvedImageUrl("");
+
+    if (!value) {
+      setImageUrlStatus("idle");
+      return;
+    }
+
+    const timer = window.setTimeout(async () => {
+      setImageUrlStatus("loading");
+      try {
+        const result = await resolveOpportunityImage({ data: { url: value } });
+        setResolvedImageUrl(result.imageUrl);
+        setImageUrlStatus("valid");
+      } catch (error) {
+        setImageUrlStatus("invalid");
+      }
+    }, 600);
+
+    return () => window.clearTimeout(timer);
+  }, [imageUrl]);
 
   const set = (key: string, value: unknown) => {
     dirty.current = true;
@@ -258,16 +285,26 @@ function OpportunityEditor() {
         if (problem) throw new Error(problem);
         if (images.length >= 6) throw new Error("Maximum of 6 images");
 
-        // External URLs must be real browser-loadable images before we store them.
-        // This prevents a broken thumbnail from being saved into the opportunity.
         if (/^https?:\/\//i.test(value)) {
-          await new Promise<void>((resolve, reject) => {
-            const probe = new Image();
-            probe.onload = () => resolve();
-            probe.onerror = () =>
-              reject(new Error("This image URL could not be loaded. Paste a direct JPG, PNG or WebP image URL, or use Upload image."));
-            probe.src = value;
+          const imported = await importOpportunityImage({
+            data: {
+              url: value,
+              folder: `opportunities/${recordId}`,
+            },
           });
+
+          const { error } = await supabase.from("opportunity_images").insert({
+            opportunity_id: recordId!,
+            image_url: imported.path,
+            display_order: images.length,
+            is_primary: images.length === 0,
+          } as never);
+          if (error) throw error;
+
+          setImageUrl("");
+          setResolvedImageUrl("");
+          setImageUrlStatus("idle");
+          return;
         }
 
         const { error } = await supabase.from("opportunity_images").insert({
@@ -484,25 +521,7 @@ function OpportunityEditor() {
                       id="external-image-url"
                       value={imageUrl}
                       onChange={(e) => {
-                        const value = e.target.value.trim();
-                        setImageUrl(value);
-                        if (!value) {
-                          setImageUrlStatus("idle");
-                          return;
-                        }
-                        if (imageUrlProblem(value)) {
-                          setImageUrlStatus("invalid");
-                          return;
-                        }
-                        setImageUrlStatus("loading");
-                        const probe = new Image();
-                        probe.onload = () => {
-                          setImageUrlStatus("valid");
-                        };
-                        probe.onerror = () => {
-                          setImageUrlStatus("invalid");
-                        };
-                        probe.src = value;
+                        setImageUrl(e.target.value);
                       }}
                       placeholder="https://example.com/image.jpg"
                       className="mt-1.5 max-w-md"
@@ -510,7 +529,13 @@ function OpportunityEditor() {
                   </div>
                   <Button
                     onClick={() => imageMutation.mutate({ type: "add", path: imageUrl })}
-                    disabled={images.length >= 6 || !imageUrl.trim() || imageUrlStatus !== "valid" || imageMutation.isPending}
+                    disabled={
+                      images.length >= 6 ||
+                      !imageUrl.trim() ||
+                      imageUrlStatus !== "valid" ||
+                      !resolvedImageUrl ||
+                      imageMutation.isPending
+                    }
                   >
                     Add image
                   </Button>
@@ -518,24 +543,28 @@ function OpportunityEditor() {
 
                 {imageUrlStatus !== "idle" && imageUrl.trim() ? (
                   <div className="mt-3 max-w-md overflow-hidden rounded-lg border border-border bg-muted/30">
-                    {imageUrlStatus === "valid" ? (
+                    {imageUrlStatus === "valid" && resolvedImageUrl ? (
                       <>
                         <img
-                          src={imageUrl}
+                          src={resolvedImageUrl}
                           alt="Image URL preview"
                           className="h-44 w-full object-cover"
+                          onError={() => {
+                            setResolvedImageUrl("");
+                            setImageUrlStatus("invalid");
+                          }}
                         />
                         <p className="px-3 py-2 text-xs text-green-700 dark:text-green-400">
-                          Image preview looks good. You can add it before publishing.
+                          Image preview loaded. Add image to save a copy to Northstar storage.
                         </p>
                       </>
                     ) : imageUrlStatus === "loading" ? (
                       <div className="flex h-28 items-center justify-center text-sm text-muted-foreground">
-                        Checking image URL…
+                        Checking image or webpage…
                       </div>
                     ) : (
                       <div className="px-3 py-3 text-sm text-destructive">
-                        This URL is not returning a usable image. Use the direct image URL or click <strong>Upload image</strong>.
+                        We could not find a usable image at this link. Try another image page/direct image URL or use <strong>Upload image</strong>.
                       </div>
                     )}
                   </div>
