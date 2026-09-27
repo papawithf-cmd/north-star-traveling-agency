@@ -25,6 +25,7 @@ import housekeeping from "@/assets/cat-housekeeping.jpg";
 import logistics from "@/assets/cat-logistics.jpg";
 import plumbers from "@/assets/cat-plumbers.jpg";
 import warehouse from "@/assets/cat-warehouse.jpg";
+import { RESTORED_PUBLIC_OPPORTUNITIES } from "@/lib/restored-public-opportunities";
 
 export const PUBLIC_STATUSES = ["published", "approved", "featured", "urgent"];
 
@@ -232,8 +233,19 @@ export async function fetchPublicOpportunities() {
     .in("status", PUBLIC_STATUSES)
     .order("published_at", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false });
-  if (error) throw error;
-  return data ?? [];
+
+  const current = error ? [] : (data ?? []);
+  const existingSlugs = new Set(current.map((item) => item.slug));
+
+  // Keep any live database records, but restore the original project-defined
+  // opportunities that are missing so the public catalogue does not disappear.
+  const restored = RESTORED_PUBLIC_OPPORTUNITIES.filter((item) => !existingSlugs.has(item.slug));
+
+  if (error) {
+    console.warn("Public opportunities database query failed; using restored catalogue.", error.message);
+  }
+
+  return [...current, ...restored];
 }
 
 export type TestimonialRow = {
