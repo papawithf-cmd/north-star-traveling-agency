@@ -27,7 +27,19 @@ export async function uploadSiteImage(file: File, folder: string) {
     }
     throw new Error(`Upload failed: ${error.message}`);
   }
-  return path;
+  const { data: publicData } = supabase.storage.from("site-images").getPublicUrl(path);
+  const publicUrl = publicData.publicUrl;
+  if (!publicUrl) throw new Error("Image uploaded but no public image URL was returned");
+
+  await new Promise<void>((resolve, reject) => {
+    const probe = new Image();
+    probe.onload = () => resolve();
+    probe.onerror = () =>
+      reject(new Error("The image uploaded, but the saved image URL could not be loaded. Please try again."));
+    probe.src = publicUrl;
+  });
+
+  return publicUrl;
 }
 
 type Props = {
@@ -47,6 +59,7 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
   const [busy, setBusy] = useState(false);
 
   const current = mediaUrl(value);
+  const [currentImageError, setCurrentImageError] = useState(false);
   const shown = preview ?? current;
 
   function pick(file?: File | null) {
@@ -59,6 +72,7 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
       toast.error("Image must be 5MB or smaller");
       return;
     }
+    setCurrentImageError(false);
     setPending(file);
     setPreview(URL.createObjectURL(file));
   }
@@ -88,11 +102,33 @@ export function ImageUploader({ value, onChange, folder, label = "Image", classN
     <div className={className}>
       <p className="text-sm font-medium">{label}</p>
       <div className="mt-2 overflow-hidden rounded-lg border border-border bg-muted/40">
-        {shown ? (
-          <img src={shown} alt={label} className="h-40 w-full object-cover" />
+        {shown && !currentImageError ? (
+          <img
+            src={shown}
+            alt={label}
+            className="h-40 w-full object-cover"
+            onLoad={() => setCurrentImageError(false)}
+            onError={() => {
+              if (preview) {
+                setCurrentImageError(true);
+                return;
+              }
+              if (value && !/^https?:\/\//i.test(value) && !value.startsWith("data:")) {
+                const fallback = `/api/public/media/${value.replace(/^\/+/, "")}`;
+                const probe = new Image();
+                probe.onload = () => {
+                  setCurrentImageError(false);
+                };
+                probe.onerror = () => setCurrentImageError(true);
+                probe.src = fallback;
+              } else {
+                setCurrentImageError(true);
+              }
+            }}
+          />
         ) : (
-          <div className="flex h-40 items-center justify-center text-xs text-muted-foreground">
-            No image yet
+          <div className="flex h-40 items-center justify-center px-4 text-center text-xs text-muted-foreground">
+            {shown ? "Image could not be loaded. Try uploading it again." : "No image yet"}
           </div>
         )}
       </div>
