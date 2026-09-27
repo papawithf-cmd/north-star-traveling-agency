@@ -1,9 +1,17 @@
--- Ensure the image bucket used by Northstar opportunities is publicly readable.
--- This is intentionally idempotent so it can safely be applied to an existing project.
-
-update storage.buckets
-set public = true
-where id = 'site-images';
+-- Ensure the Northstar image bucket exists and is publicly readable.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'site-images',
+  'site-images',
+  true,
+  5242880,
+  array['image/jpeg', 'image/png', 'image/webp']
+)
+on conflict (id) do update
+set
+  public = true,
+  file_size_limit = 5242880,
+  allowed_mime_types = array['image/jpeg', 'image/png', 'image/webp'];
 
 drop policy if exists "site-images public read" on storage.objects;
 create policy "site-images public read"
