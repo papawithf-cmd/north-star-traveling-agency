@@ -179,6 +179,35 @@ export function slugify(value: string) {
     .slice(0, 80);
 }
 
+/**
+ * Returns a slug that is safe to insert/update in the opportunities table.
+ * The database keeps the UNIQUE constraint; this only resolves normal admin
+ * form collisions by adding -2, -3, etc. while excluding the current record.
+ */
+export async function uniqueOpportunitySlug(value: string, excludeId?: string | null) {
+  const base = slugify(value) || `opportunity-${Date.now()}`;
+  const { data, error } = await supabase
+    .from("opportunities")
+    .select("id, slug")
+    .like("slug", `${base}%`);
+
+  if (error) throw error;
+
+  const taken = new Set(
+    (data ?? [])
+      .filter((row) => !excludeId || row.id !== excludeId)
+      .map((row) => row.slug),
+  );
+
+  if (!taken.has(base)) return base;
+
+  for (let suffix = 2; ; suffix += 1) {
+    const suffixText = `-${suffix}`;
+    const candidate = `${base.slice(0, Math.max(1, 80 - suffixText.length))}${suffixText}`;
+    if (!taken.has(candidate)) return candidate;
+  }
+}
+
 export const OPPORTUNITY_SELECT =
   "*, category:categories(id,name,slug), company:companies(id,name,slug,logo,verified), images:opportunity_images(id,image_url,display_order,is_primary)";
 
