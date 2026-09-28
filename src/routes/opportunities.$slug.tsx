@@ -294,13 +294,30 @@ function OpportunityDetail() {
                 Apply Now
               </Link>
             </Button>
-            {applyHref ? (
-              <Button asChild variant="outline" size="lg" className="mt-3 w-full">
-                <a href={applyHref} target="_blank" rel="noopener noreferrer">
-                  Apply directly with employer
-                </a>
-              </Button>
-            ) : null}
+            {(() => {
+              const whatsappNumber = (job.contact_whatsapp ?? job.application_whatsapp ?? "254787872803").replace(/[^0-9]/g, "");
+              const whatsappMessage = encodeURIComponent(
+                `Hello Northstar Traveling Agency, I am interested in the opportunity: ${job.title}.`,
+              );
+              const whatsappHref = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+              const callNumber = job.contact_phone ?? job.application_phone ?? "+254787872803";
+              return (
+                <div className="mt-3 grid gap-3">
+                  <Button asChild size="lg" className="w-full bg-[#25D366] text-white shadow-sm hover:bg-[#1ebe5d]">
+                    <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                      <MessageCircle className="mr-2 size-5" />
+                      WhatsApp {callNumber}
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="w-full">
+                    <a href={`tel:${callNumber}`}>
+                      <Phone className="mr-2 size-5" />
+                      Call Now
+                    </a>
+                  </Button>
+                </div>
+              );
+            })()}
           </div>
 
           <div className="rounded-xl border border-border bg-card p-6 shadow-card">
