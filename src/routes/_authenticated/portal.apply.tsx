@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2, MessageCircle, Upload } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -222,6 +222,31 @@ function ApplicationForm() {
               </div>
             ))}
           </dl>
+          <div className="mt-6 rounded-xl border border-border bg-muted/30 p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#25D366]/10 text-[#1a9b4b]">
+                <MessageCircle className="size-5" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold">Need help before submitting?</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Chat with Northstar Traveling Agency on WhatsApp about this application.
+                </p>
+              </div>
+            </div>
+            <Button asChild variant="outline" className="mt-3 w-full border-[#25D366]/40 text-[#178b44] hover:bg-[#25D366]/10">
+              <a
+                href={`https://wa.me/254787872803?text=${encodeURIComponent(
+                  `Hello Northstar Traveling Agency, I need help with my application for ${opportunity?.title ?? "a job opportunity"}.`,
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle className="mr-2 size-4" />
+                WhatsApp +254 787 872 803
+              </a>
+            </Button>
+          </div>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button onClick={submit} disabled={busy} className="sm:flex-1">
               {busy ? (
