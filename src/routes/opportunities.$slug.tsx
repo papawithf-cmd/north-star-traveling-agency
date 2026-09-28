@@ -265,21 +265,13 @@ function OpportunityDetail() {
                 {job.salary} <span className="text-base font-medium text-muted-foreground">{job.currency ?? ""}</span>
               </p>
             ) : null}
-            <dl className="mt-2">
-              <Field label="Employment type" value={job.employment_type} />
-              <Field label="Vacancies" value={job.vacancies} />
-              <Field label="Posted" value={formatDate(job.published_at ?? job.created_at)} />
-              <Field label="Last updated" value={formatDate(job.updated_at)} />
-              <Field label="Application deadline" value={formatDate(job.deadline)} />
-              <Field label="Status" value={job.status} />
-            </dl>
 
-            <Button asChild size="lg" className="mt-5 w-full bg-accent text-accent-foreground hover:bg-accent/90">
-              <Link to="/apply" search={{ job: job.slug }}>
-                Apply Now
-              </Link>
-            </Button>
-            <div className="mt-3 grid gap-3">
+            <div className="mt-5 grid gap-3">
+              <Button asChild size="lg" className="w-full bg-accent text-accent-foreground shadow-sm hover:bg-accent/90">
+                <Link to="/apply" search={{ job: job.slug }}>
+                  Apply Now
+                </Link>
+              </Button>
               <Button asChild size="lg" className="w-full bg-[#25D366] text-white shadow-sm hover:bg-[#1ebe5d]">
                 <a
                   href={northstarWhatsAppUrl(
@@ -299,6 +291,15 @@ function OpportunityDetail() {
                 </a>
               </Button>
             </div>
+
+            <dl className="mt-5">
+              <Field label="Employment type" value={job.employment_type} />
+              <Field label="Vacancies" value={job.vacancies} />
+              <Field label="Posted" value={formatDate(job.published_at ?? job.created_at)} />
+              <Field label="Last updated" value={formatDate(job.updated_at)} />
+              <Field label="Application deadline" value={formatDate(job.deadline)} />
+              <Field label="Status" value={job.status} />
+            </dl>
           </div>
 
           <div className="rounded-xl border border-border bg-card p-6 shadow-card">
