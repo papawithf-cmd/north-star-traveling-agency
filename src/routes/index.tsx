@@ -374,9 +374,7 @@ function Home() {
               >
                 <div className="flex items-center justify-between gap-4">
                   <Quote className="size-8 text-accent" aria-hidden="true" />
-                  {testimonial.is_demo ? (
-                    <Badge className="bg-muted text-foreground">Demo</Badge>
-                  ) : null}
+
                 </div>
                 <div className="mt-4 flex gap-1" aria-label={`${testimonial.rating} out of 5 stars`}>
                   {Array.from({ length: 5 }, (_, index) => (
