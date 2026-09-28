@@ -287,8 +287,7 @@ export async function fetchPublicOpportunities() {
     .from("opportunities")
     .select(OPPORTUNITY_SELECT)
     .in("status", PUBLIC_STATUSES)
-    .order("published_at", { ascending: false, nullsFirst: false })
-    .order("created_at", { ascending: false });
+    .order("title", { ascending: true });
   if (error) throw error;
   return data ?? [];
 }
