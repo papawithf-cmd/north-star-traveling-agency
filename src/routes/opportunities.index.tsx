@@ -76,7 +76,7 @@ function OpportunitiesPage() {
       if (search.type && j.employment_type !== search.type) return false;
       if (search.company && j.company?.slug !== search.company) return false;
       return true;
-    });
+    }).sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
   }, [jobs, search]);
 
   const hasFilters = Boolean(
