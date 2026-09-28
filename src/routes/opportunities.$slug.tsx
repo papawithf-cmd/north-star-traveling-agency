@@ -115,21 +115,6 @@ function OpportunityDetail() {
     : [{ id: "fallback", image_url: categoryImage(job.category?.slug), caption: null }];
   const current = images[Math.min(active, images.length - 1)]!;
 
-  const applyHref = (() => {
-    switch (job.application_method) {
-      case "email":
-        return job.application_email ? `mailto:${job.application_email}?subject=${encodeURIComponent(job.title)}` : null;
-      case "phone":
-        return job.application_phone ? `tel:${job.application_phone}` : null;
-      case "whatsapp":
-        return job.application_whatsapp
-          ? `https://wa.me/${job.application_whatsapp.replace(/[^0-9]/g, "")}`
-          : null;
-      default:
-        return job.application_url || job.contact_website || null;
-    }
-  })();
-
   return (
     <SiteLayout>
       <section className="hero-gradient text-navy-foreground">
