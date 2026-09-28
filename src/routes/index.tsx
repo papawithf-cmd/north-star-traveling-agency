@@ -97,7 +97,10 @@ function Home() {
   const featured = (jobs.filter((job) => job.featured).length
     ? jobs.filter((job) => job.featured)
     : jobs
-  ).slice(0, 6) as HomeJob[];
+  )
+    .slice()
+    .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }))
+    .slice(0, 6) as HomeJob[];
   const liveCountries = new Set(jobs.map((job) => job.country?.trim()).filter(Boolean)).size;
   const recentCutoff = Date.now() - 1000 * 60 * 60 * 24 * 14;
   const recentlyAdded = jobs.filter((job) => {
