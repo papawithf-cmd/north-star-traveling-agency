@@ -59,6 +59,10 @@ export function northstarWhatsAppUrl(message?: string) {
   return `https://wa.me/${NORTHSTAR_WHATSAPP_DIGITS}${suffix}`;
 }
 
+export function northstarCallUrl() {
+  return `tel:+${NORTHSTAR_WHATSAPP_DIGITS}`;
+}
+
 const fallbackImages: Record<string, string> = {
   "air-hostess": airHostess,
   airmen: airmen,
