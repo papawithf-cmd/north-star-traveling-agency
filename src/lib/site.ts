@@ -50,6 +50,15 @@ export const EMPLOYMENT_TYPES = [
 
 export const APPLICATION_METHODS = ["link", "email", "phone", "whatsapp", "website"];
 
+/** Northstar's primary WhatsApp contact used by opportunity actions across the public site. */
+export const NORTHSTAR_WHATSAPP = "+254 100 922 332";
+export const NORTHSTAR_WHATSAPP_DIGITS = "254100922332";
+
+export function northstarWhatsAppUrl(message?: string) {
+  const suffix = message ? `?text=${encodeURIComponent(message)}` : "";
+  return `https://wa.me/${NORTHSTAR_WHATSAPP_DIGITS}${suffix}`;
+}
+
 const fallbackImages: Record<string, string> = {
   "air-hostess": airHostess,
   airmen: airmen,
