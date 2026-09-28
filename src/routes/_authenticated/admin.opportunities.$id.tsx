@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  APPLICATION_METHODS,
   EMPLOYMENT_TYPES,
   STATUSES,
   fetchCategories,
