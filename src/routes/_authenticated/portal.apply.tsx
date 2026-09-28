@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchCategories } from "@/lib/site";
+import { fetchCategories, northstarWhatsAppUrl } from "@/lib/site";
 import { PASSPORT_STATUSES } from "@/lib/applications";
 import { notifyAdminOfApplication } from "@/lib/applications.functions";
 
@@ -236,9 +236,9 @@ function ApplicationForm() {
             </div>
             <Button asChild variant="outline" className="mt-3 w-full border-[#25D366]/40 text-[#178b44] hover:bg-[#25D366]/10">
               <a
-                href={`https://wa.me/254787872803?text=${encodeURIComponent(
+                href={northstarWhatsAppUrl(
                   `Hello Northstar Traveling Agency, I need help with my application for ${opportunity?.title ?? "a job opportunity"}.`,
-                )}`}
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
               >
