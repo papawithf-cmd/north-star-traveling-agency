@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Mail, MapPin, MessageCircle, Phone, Clock } from "lucide-react";
 
-import { fetchCategories, fetchSettings } from "@/lib/site";
+import { fetchCategories, fetchSettings, northstarWhatsAppUrl } from "@/lib/site";
 
 export function Footer() {
   const { data: settings } = useQuery({ queryKey: ["settings"], queryFn: fetchSettings });
@@ -64,8 +64,8 @@ export function Footer() {
             </li>
             <li className="flex items-start gap-2">
               <MessageCircle className="mt-0.5 size-4 shrink-0" />
-              <a href="https://wa.me/254100922332" target="_blank" rel="noreferrer" className="hover:text-accent hover:underline">
-                WhatsApp: +254 100 922 332
+              <a href={northstarWhatsAppUrl()} target="_blank" rel="noreferrer" className="hover:text-accent hover:underline">
+                WhatsApp Us
               </a>
             </li>
             <li className="flex items-start gap-2 break-all">
