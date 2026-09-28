@@ -174,7 +174,7 @@ function AdminOpportunities() {
       const { data, error } = await supabase
         .from("opportunities")
         .select(OPPORTUNITY_SELECT)
-        .order("updated_at", { ascending: false });
+        .order("title", { ascending: true });
       if (error) throw error;
       return data ?? [];
     },
