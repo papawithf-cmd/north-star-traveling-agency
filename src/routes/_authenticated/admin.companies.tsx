@@ -260,7 +260,7 @@ function AdminCompanies() {
                         variant="ghost"
                         size="icon"
                         aria-label="Edit"
-                        onClick={() =>
+                        onClick={() => {
                           setLogoPreviewStatus(c.logo ? "loading" : "idle");
                           setForm({
                             id: c.id,
@@ -277,8 +277,8 @@ function AdminCompanies() {
                             phone: c.phone ?? "",
                             whatsapp: c.whatsapp ?? "",
                             verified: c.verified,
-                          })
-                        }
+                          });
+                        }}
                       >
                         <Pencil className="size-4" />
                       </Button>
