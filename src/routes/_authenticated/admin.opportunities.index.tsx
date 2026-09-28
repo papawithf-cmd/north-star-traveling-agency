@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Copy, ExternalLink, Pencil, Trash2 } from "lucide-react";
 
@@ -167,10 +167,6 @@ function AdminOpportunities() {
       setRestoring(false);
     }
   };
-
-  useEffect(() => {
-    void runRestore();
-  }, []);
 
   const { data: rows = [] } = useQuery({
     queryKey: ["admin-opportunities"],
