@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { BadgeCheck, Briefcase, CalendarClock, Clock, MapPin } from "lucide-react";
+import { BadgeCheck, Briefcase, CalendarClock, Clock, MapPin, MessageCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { categoryImage, formatDate } from "@/lib/site";
+import { categoryImage, formatDate, northstarWhatsAppUrl } from "@/lib/site";
 
 export type OpportunityRow = {
   id: string;
@@ -107,13 +107,27 @@ export function OpportunityCard({ job }: { job: OpportunityRow }) {
           </p>
         ) : null}
 
-        <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
+        <div className="mt-5 flex flex-col gap-2 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-xs text-muted-foreground">{posted ? `Posted ${posted}` : ""}</span>
-          <Button asChild size="sm">
-            <Link to="/opportunities/$slug" params={{ slug: job.slug }}>
-              View Opportunity
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild size="sm" variant="outline">
+              <Link to="/opportunities/$slug" params={{ slug: job.slug }}>
+                View Details
+              </Link>
+            </Button>
+            <Button asChild size="sm" className="bg-[#25D366] text-white hover:bg-[#1ebe5d]">
+              <a
+                href={northstarWhatsAppUrl(
+                  `Hello Northstar Traveling Agency, I am interested in the opportunity: ${job.title}.`,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle className="mr-1.5 size-4" />
+                WhatsApp Us
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
     </article>
