@@ -49,7 +49,7 @@ const emptyForm: Row = {
   verified: false,
   vacancies: 1,
   currency: "USD",
-  application_method: "email",
+  application_method: "whatsapp",
 };
 
 const textAreas: [string, string][] = [
@@ -205,6 +205,15 @@ function OpportunityEditor() {
         str(payload, "slug") || slugify(str(payload, "title")),
         recordId,
       );
+
+      // All public opportunity applications use Northstar's central WhatsApp flow.
+      // Remove legacy direct-employer application destinations when an admin saves
+      // or publishes an opportunity so every posted job gets the same public CTA.
+      payload["application_method"] = "whatsapp";
+      payload["application_url"] = null;
+      payload["application_email"] = null;
+      payload["application_phone"] = null;
+      payload["application_whatsapp"] = null;
       for (const key of ["min_age", "max_age", "vacancies"]) {
         payload[key] = payload[key] === "" || payload[key] === undefined ? null : Number(payload[key]);
       }
@@ -469,16 +478,15 @@ function OpportunityEditor() {
         <TabsContent value="application">
           <Card>
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <Label>Application method</Label>
-                <Select value={str(form, "application_method") || "email"} onValueChange={(v) => set("application_method", v)}>
-                  <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {APPLICATION_METHODS.map((m) => (
-                      <SelectItem key={m} value={m}>{m}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="rounded-lg border border-border bg-muted/30 p-4 sm:col-span-2">
+                <Label>Public application method</Label>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  All opportunities posted by Northstar use the central WhatsApp application flow.
+                  The public contact number stays hidden.
+                </p>
+                <div className="mt-3 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium">
+                  WhatsApp — Northstar Traveling Agency
+                </div>
               </div>
               {applicationFields.map(([key, label]) => (
                 <Field key={key} label={label} value={str(form, key)} onChange={(v) => set(key, v)} />
