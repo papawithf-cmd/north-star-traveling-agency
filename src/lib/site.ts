@@ -277,9 +277,15 @@ export async function fetchCategories() {
   const { data, error } = await supabase
     .from("categories")
     .select("*")
-    .order("display_order", { ascending: true });
+    .order("name", { ascending: true });
   if (error) throw error;
-  return data ?? [];
+
+  // Keep category lists consistently alphabetical everywhere in the app.
+  // This means newly created/edited categories automatically appear in the
+  // correct A–Z position after the categories query is refreshed.
+  return (data ?? []).slice().sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+  );
 }
 
 export async function fetchPublicOpportunities() {
