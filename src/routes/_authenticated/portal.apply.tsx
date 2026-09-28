@@ -243,7 +243,7 @@ function ApplicationForm() {
                 rel="noopener noreferrer"
               >
                 <MessageCircle className="mr-2 size-4" />
-                WhatsApp +254 787 872 803
+                WhatsApp
               </a>
             </Button>
           </div>
