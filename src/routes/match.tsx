@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, MessageCircle, Sparkles } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { categoryImage, fetchPublicOpportunities } from "@/lib/site";
+import { categoryImage, fetchPublicOpportunities, northstarWhatsAppUrl } from "@/lib/site";
 import { recommendOpportunities, type Recommendation } from "@/lib/recommend.functions";
 
 export const Route = createFileRoute("/match")({
@@ -105,8 +105,24 @@ function MatchPage() {
                     <p className="text-sm text-muted-foreground">{[job.category?.name, job.city, job.country].filter(Boolean).join(" · ")}</p>
                     <p className="mt-2 text-sm">{r.reason}</p>
                     <div className="mt-3 flex flex-wrap gap-2">
-                      <Button asChild size="sm" variant="outline"><Link to="/opportunities/$slug" params={{ slug: job.slug }}>View Details</Link></Button>
-                      <Button asChild size="sm"><Link to="/apply" search={{ job: job.slug }}>Apply</Link></Button>
+                      <Button asChild size="sm" variant="outline">
+                        <Link to="/opportunities/$slug" params={{ slug: job.slug }}>View Details</Link>
+                      </Button>
+                      <Button asChild size="sm">
+                        <Link to="/apply" search={{ job: job.slug }}>Apply</Link>
+                      </Button>
+                      <Button asChild size="sm" className="bg-[#25D366] text-white hover:bg-[#1ebe5d]">
+                        <a
+                          href={northstarWhatsAppUrl(
+                            `Hello Northstar Traveling Agency, I am interested in the opportunity: ${job.title}.`,
+                          )}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <MessageCircle className="mr-1.5 size-4" />
+                          WhatsApp Us
+                        </a>
+                      </Button>
                     </div>
                   </div>
                 </div>
