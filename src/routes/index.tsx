@@ -474,7 +474,7 @@ function FeaturedOpportunityCard({ job }: { job: HomeJob }) {
   const isDemo = /\b(demo|sample)\b/i.test(`${job.title} ${job.description ?? ""}`);
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
+    <article className="group flex h-full flex-col overflow-hidden rounded-lg border border-slate-300/80 bg-slate-100 shadow-card ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:border-secondary/60 hover:bg-slate-200/80 hover:shadow-lift">
       <div className="relative aspect-[16/10] overflow-hidden bg-muted">
         <img
           src={image}
