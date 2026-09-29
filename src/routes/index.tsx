@@ -64,7 +64,7 @@ const countryRegions = [
   {
     name: "Asia",
     countries: [
-      ["Afghanistan","AF"],["Armenia","AM"],["Azerbaijan","AZ"],["Bangladesh","BD"],["Bhutan","BT"],["Brunei","BN"],["Cambodia","KH"],["China","CN"],["Cyprus","CY"],["Georgia","GE"],["India","IN"],["Indonesia","ID"],["Iran","IR"],["Iraq","IQ"],["Israel","IL"],["Japan","JP"],["Jordan","JO"],["Kazakhstan","KZ"],["Kyrgyzstan","KG"],["Laos","LA"],["Lebanon","LB"],["Malaysia","MY"],["Maldives","MV"],["Mongolia","MN"],["Myanmar","MM"],["Nepal","NP"],["North Korea","KP"],["Oman","OM"],["Pakistan","PK"],["Palestine","PS"],["Philippines","PH"],["Saudi Arabia","SA"],["Singapore","SG"],["South Korea","KR"],["Sri Lanka","LK"],["Syria","SY"],["Tajikistan","TJ"],["Thailand","TH"],["Timor-Leste","TL"],["Turkey","TR"],["Turkmenistan","TM"],["United Arab Emirates","AE"],["Uzbekistan","UZ"],["Vietnam","VN"],["Yemen","YE"]
+      ["Afghanistan","AF"],["Armenia","AM"],["Azerbaijan","AZ"],["Bangladesh","BD"],["Bhutan","BT"],["Brunei","BN"],["Cambodia","KH"],["China","CN"],["Cyprus","CY"],["Georgia","GE"],["India","IN"],["Indonesia","ID"],["Iran","IR"],["Iraq","IQ"],["Israel","IL"],["Japan","JP"],["Jordan","JO"],["Kazakhstan","KZ"],["Kyrgyzstan","KG"],["Laos","LA"],["Lebanon","LB"],["Malaysia","MY"],["Maldives","MV"],["Mongolia","MN"],["Myanmar","MM"],["Nepal","NP"],["North Korea","KP"],["Pakistan","PK"],["Palestine","PS"],["Philippines","PH"],["Singapore","SG"],["South Korea","KR"],["Sri Lanka","LK"],["Syria","SY"],["Tajikistan","TJ"],["Thailand","TH"],["Timor-Leste","TL"],["Turkey","TR"],["Turkmenistan","TM"],["Uzbekistan","UZ"],["Vietnam","VN"],["Yemen","YE"]
     ]
   },
   {
