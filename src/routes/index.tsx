@@ -54,54 +54,203 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const countryRegions = [
-  {
-    name: "Africa",
-    countries: [
-      ["Algeria","DZ"],["Angola","AO"],["Benin","BJ"],["Botswana","BW"],["Burkina Faso","BF"],["Burundi","BI"],["Cabo Verde","CV"],["Cameroon","CM"],["Central African Republic","CF"],["Chad","TD"],["Comoros","KM"],["Democratic Republic of the Congo","CD"],["Republic of the Congo","CG"],["Côte d'Ivoire","CI"],["Djibouti","DJ"],["Egypt","EG"],["Equatorial Guinea","GQ"],["Eritrea","ER"],["Eswatini","SZ"],["Ethiopia","ET"],["Gabon","GA"],["Gambia","GM"],["Ghana","GH"],["Guinea","GN"],["Guinea-Bissau","GW"],["Kenya","KE"],["Lesotho","LS"],["Liberia","LR"],["Libya","LY"],["Madagascar","MG"],["Malawi","MW"],["Mali","ML"],["Mauritania","MR"],["Mauritius","MU"],["Morocco","MA"],["Mozambique","MZ"],["Namibia","NA"],["Niger","NE"],["Nigeria","NG"],["Rwanda","RW"],["São Tomé and Príncipe","ST"],["Senegal","SN"],["Seychelles","SC"],["Sierra Leone","SL"],["Somalia","SO"],["South Africa","ZA"],["South Sudan","SS"],["Sudan","SD"],["Tanzania","TZ"],["Togo","TG"],["Tunisia","TN"],["Uganda","UG"],["Zambia","ZM"],["Zimbabwe","ZW"]
-    ]
-  },
-  {
-    name: "Asia",
-    countries: [
-      ["Afghanistan","AF"],["Armenia","AM"],["Azerbaijan","AZ"],["Bangladesh","BD"],["Bhutan","BT"],["Brunei","BN"],["Cambodia","KH"],["China","CN"],["Cyprus","CY"],["Georgia","GE"],["India","IN"],["Indonesia","ID"],["Iran","IR"],["Iraq","IQ"],["Israel","IL"],["Japan","JP"],["Jordan","JO"],["Kazakhstan","KZ"],["Kyrgyzstan","KG"],["Laos","LA"],["Lebanon","LB"],["Malaysia","MY"],["Maldives","MV"],["Mongolia","MN"],["Myanmar","MM"],["Nepal","NP"],["North Korea","KP"],["Pakistan","PK"],["Palestine","PS"],["Philippines","PH"],["Singapore","SG"],["South Korea","KR"],["Sri Lanka","LK"],["Syria","SY"],["Tajikistan","TJ"],["Thailand","TH"],["Timor-Leste","TL"],["Turkey","TR"],["Turkmenistan","TM"],["Uzbekistan","UZ"],["Vietnam","VN"],["Yemen","YE"]
-    ]
-  },
-  {
-    name: "Gulf Cooperation Council (GCC)",
-    countries: [
-      ["Bahrain","BH"],["Kuwait","KW"],["Oman","OM"],["Qatar","QA"],["Saudi Arabia","SA"],["United Arab Emirates","AE"]
-    ]
-  },
-  {
-    name: "Europe",
-    countries: [
-      ["Albania","AL"],["Andorra","AD"],["Austria","AT"],["Belarus","BY"],["Belgium","BE"],["Bosnia and Herzegovina","BA"],["Bulgaria","BG"],["Croatia","HR"],["Czechia","CZ"],["Denmark","DK"],["Estonia","EE"],["Finland","FI"],["France","FR"],["Germany","DE"],["Greece","GR"],["Hungary","HU"],["Iceland","IS"],["Ireland","IE"],["Italy","IT"],["Latvia","LV"],["Liechtenstein","LI"],["Lithuania","LT"],["Luxembourg","LU"],["Malta","MT"],["Moldova","MD"],["Monaco","MC"],["Montenegro","ME"],["Netherlands","NL"],["North Macedonia","MK"],["Norway","NO"],["Poland","PL"],["Portugal","PT"],["Romania","RO"],["Russia","RU"],["San Marino","SM"],["Serbia","RS"],["Slovakia","SK"],["Slovenia","SI"],["Spain","ES"],["Sweden","SE"],["Switzerland","CH"],["Ukraine","UA"],["United Kingdom","GB"],["Vatican City","VA"]
-    ]
-  },
-  {
-    name: "North America",
-    countries: [
-      ["Antigua and Barbuda","AG"],["Bahamas","BS"],["Barbados","BB"],["Belize","BZ"],["Canada","CA"],["Costa Rica","CR"],["Cuba","CU"],["Dominica","DM"],["Dominican Republic","DO"],["El Salvador","SV"],["Grenada","GD"],["Guatemala","GT"],["Haiti","HT"],["Honduras","HN"],["Jamaica","JM"],["Mexico","MX"],["Nicaragua","NI"],["Panama","PA"],["Saint Kitts and Nevis","KN"],["Saint Lucia","LC"],["Saint Vincent and the Grenadines","VC"],["Trinidad and Tobago","TT"],["United States","US"]
-    ]
-  },
-  {
-    name: "South America",
-    countries: [
-      ["Argentina","AR"],["Bolivia","BO"],["Brazil","BR"],["Chile","CL"],["Colombia","CO"],["Ecuador","EC"],["Guyana","GY"],["Paraguay","PY"],["Peru","PE"],["Suriname","SR"],["Uruguay","UY"],["Venezuela","VE"]
-    ]
-  },
-  {
-    name: "Oceania",
-    countries: [
-      ["Australia","AU"],["Fiji","FJ"],["Kiribati","KI"],["Marshall Islands","MH"],["Micronesia","FM"],["Nauru","NR"],["New Zealand","NZ"],["Palau","PW"],["Papua New Guinea","PG"],["Samoa","WS"],["Solomon Islands","SB"],["Tonga","TO"],["Tuvalu","TV"],["Vanuatu","VU"]
-    ]
-  }
+const countries = [
+  { label: "Afghanistan", query: "Afghanistan", code: "AF" },
+  { label: "Albania", query: "Albania", code: "AL" },
+  { label: "Algeria", query: "Algeria", code: "DZ" },
+  { label: "Andorra", query: "Andorra", code: "AD" },
+  { label: "Angola", query: "Angola", code: "AO" },
+  { label: "Antigua and Barbuda", query: "Antigua and Barbuda", code: "AG" },
+  { label: "Argentina", query: "Argentina", code: "AR" },
+  { label: "Armenia", query: "Armenia", code: "AM" },
+  { label: "Australia", query: "Australia", code: "AU" },
+  { label: "Austria", query: "Austria", code: "AT" },
+  { label: "Azerbaijan", query: "Azerbaijan", code: "AZ" },
+  { label: "Bahamas", query: "Bahamas", code: "BS" },
+  { label: "Bahrain", query: "Bahrain", code: "BH" },
+  { label: "Bangladesh", query: "Bangladesh", code: "BD" },
+  { label: "Barbados", query: "Barbados", code: "BB" },
+  { label: "Belarus", query: "Belarus", code: "BY" },
+  { label: "Belgium", query: "Belgium", code: "BE" },
+  { label: "Belize", query: "Belize", code: "BZ" },
+  { label: "Benin", query: "Benin", code: "BJ" },
+  { label: "Bhutan", query: "Bhutan", code: "BT" },
+  { label: "Bolivia", query: "Bolivia", code: "BO" },
+  { label: "Bosnia and Herzegovina", query: "Bosnia and Herzegovina", code: "BA" },
+  { label: "Botswana", query: "Botswana", code: "BW" },
+  { label: "Brazil", query: "Brazil", code: "BR" },
+  { label: "Brunei", query: "Brunei", code: "BN" },
+  { label: "Bulgaria", query: "Bulgaria", code: "BG" },
+  { label: "Burkina Faso", query: "Burkina Faso", code: "BF" },
+  { label: "Burundi", query: "Burundi", code: "BI" },
+  { label: "Cabo Verde", query: "Cabo Verde", code: "CV" },
+  { label: "Cambodia", query: "Cambodia", code: "KH" },
+  { label: "Cameroon", query: "Cameroon", code: "CM" },
+  { label: "Canada", query: "Canada", code: "CA" },
+  { label: "Central African Republic", query: "Central African Republic", code: "CF" },
+  { label: "Chad", query: "Chad", code: "TD" },
+  { label: "Chile", query: "Chile", code: "CL" },
+  { label: "China", query: "China", code: "CN" },
+  { label: "Colombia", query: "Colombia", code: "CO" },
+  { label: "Comoros", query: "Comoros", code: "KM" },
+  { label: "Congo, Democratic Republic of the", query: "Congo, Democratic Republic of the", code: "CD" },
+  { label: "Congo, Republic of the", query: "Congo, Republic of the", code: "CG" },
+  { label: "Costa Rica", query: "Costa Rica", code: "CR" },
+  { label: "Côte d'Ivoire", query: "Côte d'Ivoire", code: "CI" },
+  { label: "Croatia", query: "Croatia", code: "HR" },
+  { label: "Cuba", query: "Cuba", code: "CU" },
+  { label: "Cyprus", query: "Cyprus", code: "CY" },
+  { label: "Czechia", query: "Czechia", code: "CZ" },
+  { label: "Denmark", query: "Denmark", code: "DK" },
+  { label: "Djibouti", query: "Djibouti", code: "DJ" },
+  { label: "Dominica", query: "Dominica", code: "DM" },
+  { label: "Dominican Republic", query: "Dominican Republic", code: "DO" },
+  { label: "Ecuador", query: "Ecuador", code: "EC" },
+  { label: "Egypt", query: "Egypt", code: "EG" },
+  { label: "El Salvador", query: "El Salvador", code: "SV" },
+  { label: "Equatorial Guinea", query: "Equatorial Guinea", code: "GQ" },
+  { label: "Eritrea", query: "Eritrea", code: "ER" },
+  { label: "Estonia", query: "Estonia", code: "EE" },
+  { label: "Eswatini", query: "Eswatini", code: "SZ" },
+  { label: "Ethiopia", query: "Ethiopia", code: "ET" },
+  { label: "Fiji", query: "Fiji", code: "FJ" },
+  { label: "Finland", query: "Finland", code: "FI" },
+  { label: "France", query: "France", code: "FR" },
+  { label: "Gabon", query: "Gabon", code: "GA" },
+  { label: "Gambia", query: "Gambia", code: "GM" },
+  { label: "Georgia", query: "Georgia", code: "GE" },
+  { label: "Germany", query: "Germany", code: "DE" },
+  { label: "Ghana", query: "Ghana", code: "GH" },
+  { label: "Greece", query: "Greece", code: "GR" },
+  { label: "Grenada", query: "Grenada", code: "GD" },
+  { label: "Guatemala", query: "Guatemala", code: "GT" },
+  { label: "Guinea", query: "Guinea", code: "GN" },
+  { label: "Guinea-Bissau", query: "Guinea-Bissau", code: "GW" },
+  { label: "Guyana", query: "Guyana", code: "GY" },
+  { label: "Haiti", query: "Haiti", code: "HT" },
+  { label: "Honduras", query: "Honduras", code: "HN" },
+  { label: "Hungary", query: "Hungary", code: "HU" },
+  { label: "Iceland", query: "Iceland", code: "IS" },
+  { label: "India", query: "India", code: "IN" },
+  { label: "Indonesia", query: "Indonesia", code: "ID" },
+  { label: "Iran", query: "Iran", code: "IR" },
+  { label: "Iraq", query: "Iraq", code: "IQ" },
+  { label: "Ireland", query: "Ireland", code: "IE" },
+  { label: "Israel", query: "Israel", code: "IL" },
+  { label: "Italy", query: "Italy", code: "IT" },
+  { label: "Jamaica", query: "Jamaica", code: "JM" },
+  { label: "Japan", query: "Japan", code: "JP" },
+  { label: "Jordan", query: "Jordan", code: "JO" },
+  { label: "Kazakhstan", query: "Kazakhstan", code: "KZ" },
+  { label: "Kenya", query: "Kenya", code: "KE" },
+  { label: "Kiribati", query: "Kiribati", code: "KI" },
+  { label: "Kuwait", query: "Kuwait", code: "KW" },
+  { label: "Kyrgyzstan", query: "Kyrgyzstan", code: "KG" },
+  { label: "Laos", query: "Laos", code: "LA" },
+  { label: "Latvia", query: "Latvia", code: "LV" },
+  { label: "Lebanon", query: "Lebanon", code: "LB" },
+  { label: "Lesotho", query: "Lesotho", code: "LS" },
+  { label: "Liberia", query: "Liberia", code: "LR" },
+  { label: "Libya", query: "Libya", code: "LY" },
+  { label: "Liechtenstein", query: "Liechtenstein", code: "LI" },
+  { label: "Lithuania", query: "Lithuania", code: "LT" },
+  { label: "Luxembourg", query: "Luxembourg", code: "LU" },
+  { label: "Madagascar", query: "Madagascar", code: "MG" },
+  { label: "Malawi", query: "Malawi", code: "MW" },
+  { label: "Malaysia", query: "Malaysia", code: "MY" },
+  { label: "Maldives", query: "Maldives", code: "MV" },
+  { label: "Mali", query: "Mali", code: "ML" },
+  { label: "Malta", query: "Malta", code: "MT" },
+  { label: "Marshall Islands", query: "Marshall Islands", code: "MH" },
+  { label: "Mauritania", query: "Mauritania", code: "MR" },
+  { label: "Mauritius", query: "Mauritius", code: "MU" },
+  { label: "Mexico", query: "Mexico", code: "MX" },
+  { label: "Micronesia", query: "Micronesia", code: "FM" },
+  { label: "Moldova", query: "Moldova", code: "MD" },
+  { label: "Monaco", query: "Monaco", code: "MC" },
+  { label: "Mongolia", query: "Mongolia", code: "MN" },
+  { label: "Montenegro", query: "Montenegro", code: "ME" },
+  { label: "Morocco", query: "Morocco", code: "MA" },
+  { label: "Mozambique", query: "Mozambique", code: "MZ" },
+  { label: "Myanmar", query: "Myanmar", code: "MM" },
+  { label: "Namibia", query: "Namibia", code: "NA" },
+  { label: "Nauru", query: "Nauru", code: "NR" },
+  { label: "Nepal", query: "Nepal", code: "NP" },
+  { label: "Netherlands", query: "Netherlands", code: "NL" },
+  { label: "New Zealand", query: "New Zealand", code: "NZ" },
+  { label: "Nicaragua", query: "Nicaragua", code: "NI" },
+  { label: "Niger", query: "Niger", code: "NE" },
+  { label: "Nigeria", query: "Nigeria", code: "NG" },
+  { label: "North Korea", query: "North Korea", code: "KP" },
+  { label: "North Macedonia", query: "North Macedonia", code: "MK" },
+  { label: "Norway", query: "Norway", code: "NO" },
+  { label: "Oman", query: "Oman", code: "OM" },
+  { label: "Pakistan", query: "Pakistan", code: "PK" },
+  { label: "Palau", query: "Palau", code: "PW" },
+  { label: "Palestine", query: "Palestine", code: "PS" },
+  { label: "Panama", query: "Panama", code: "PA" },
+  { label: "Papua New Guinea", query: "Papua New Guinea", code: "PG" },
+  { label: "Paraguay", query: "Paraguay", code: "PY" },
+  { label: "Peru", query: "Peru", code: "PE" },
+  { label: "Philippines", query: "Philippines", code: "PH" },
+  { label: "Poland", query: "Poland", code: "PL" },
+  { label: "Portugal", query: "Portugal", code: "PT" },
+  { label: "Qatar", query: "Qatar", code: "QA" },
+  { label: "Romania", query: "Romania", code: "RO" },
+  { label: "Russia", query: "Russia", code: "RU" },
+  { label: "Rwanda", query: "Rwanda", code: "RW" },
+  { label: "Saint Kitts and Nevis", query: "Saint Kitts and Nevis", code: "KN" },
+  { label: "Saint Lucia", query: "Saint Lucia", code: "LC" },
+  { label: "Saint Vincent and the Grenadines", query: "Saint Vincent and the Grenadines", code: "VC" },
+  { label: "Samoa", query: "Samoa", code: "WS" },
+  { label: "San Marino", query: "San Marino", code: "SM" },
+  { label: "São Tomé and Príncipe", query: "São Tomé and Príncipe", code: "ST" },
+  { label: "Saudi Arabia", query: "Saudi Arabia", code: "SA" },
+  { label: "Senegal", query: "Senegal", code: "SN" },
+  { label: "Serbia", query: "Serbia", code: "RS" },
+  { label: "Seychelles", query: "Seychelles", code: "SC" },
+  { label: "Sierra Leone", query: "Sierra Leone", code: "SL" },
+  { label: "Singapore", query: "Singapore", code: "SG" },
+  { label: "Slovakia", query: "Slovakia", code: "SK" },
+  { label: "Slovenia", query: "Slovenia", code: "SI" },
+  { label: "Solomon Islands", query: "Solomon Islands", code: "SB" },
+  { label: "Somalia", query: "Somalia", code: "SO" },
+  { label: "South Africa", query: "South Africa", code: "ZA" },
+  { label: "South Korea", query: "South Korea", code: "KR" },
+  { label: "South Sudan", query: "South Sudan", code: "SS" },
+  { label: "Spain", query: "Spain", code: "ES" },
+  { label: "Sri Lanka", query: "Sri Lanka", code: "LK" },
+  { label: "Sudan", query: "Sudan", code: "SD" },
+  { label: "Suriname", query: "Suriname", code: "SR" },
+  { label: "Sweden", query: "Sweden", code: "SE" },
+  { label: "Switzerland", query: "Switzerland", code: "CH" },
+  { label: "Syria", query: "Syria", code: "SY" },
+  { label: "Tajikistan", query: "Tajikistan", code: "TJ" },
+  { label: "Tanzania", query: "Tanzania", code: "TZ" },
+  { label: "Thailand", query: "Thailand", code: "TH" },
+  { label: "Timor-Leste", query: "Timor-Leste", code: "TL" },
+  { label: "Togo", query: "Togo", code: "TG" },
+  { label: "Tonga", query: "Tonga", code: "TO" },
+  { label: "Trinidad and Tobago", query: "Trinidad and Tobago", code: "TT" },
+  { label: "Tunisia", query: "Tunisia", code: "TN" },
+  { label: "Turkey", query: "Turkey", code: "TR" },
+  { label: "Turkmenistan", query: "Turkmenistan", code: "TM" },
+  { label: "Tuvalu", query: "Tuvalu", code: "TV" },
+  { label: "Uganda", query: "Uganda", code: "UG" },
+  { label: "Ukraine", query: "Ukraine", code: "UA" },
+  { label: "United Arab Emirates", query: "United Arab Emirates", code: "AE" },
+  { label: "United Kingdom", query: "United Kingdom", code: "GB" },
+  { label: "United States", query: "United States", code: "US" },
+  { label: "Uruguay", query: "Uruguay", code: "UY" },
+  { label: "Uzbekistan", query: "Uzbekistan", code: "UZ" },
+  { label: "Vanuatu", query: "Vanuatu", code: "VU" },
+  { label: "Vatican City", query: "Vatican City", code: "VA" },
+  { label: "Venezuela", query: "Venezuela", code: "VE" },
+  { label: "Vietnam", query: "Vietnam", code: "VN" },
+  { label: "Yemen", query: "Yemen", code: "YE" },
+  { label: "Zambia", query: "Zambia", code: "ZM" },
+  { label: "Zimbabwe", query: "Zimbabwe", code: "ZW" },
 ] as const;
-
-const countries = countryRegions.flatMap((region) =>
-  region.countries.map(([label, code]) => ({ label, query: label, code })),
-);
 
 type HomeJob = OpportunityRow & {
   description?: string | null;
@@ -300,40 +449,32 @@ function Home() {
           title="Explore Opportunities by Country"
           description="Choose a destination to see matching opportunities already available in our listings."
         />
-        <div className="space-y-10">
-          {countryRegions.map((region) => (
-            <div key={region.name}>
-              <h3 className="mb-4 font-display text-lg font-bold uppercase tracking-normal text-foreground">
-                {region.name}
-              </h3>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
-                {region.countries.map(([label, code]) => (
-                  <Link
-                    key={code}
-                    to="/opportunities"
-                    search={{ location: label }}
-                    className="group flex min-h-28 flex-col justify-between rounded-lg border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-secondary hover:shadow-card"
-                  >
-                    <span className="flex size-11 items-center justify-center overflow-hidden rounded-full bg-primary/10" aria-hidden="true">
-                      <img
-                        src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
-                        alt=""
-                        width={40}
-                        height={28}
-                        loading="lazy"
-                        className="h-7 w-10 object-cover"
-                      />
-                    </span>
-                    <span className="mt-4 flex items-end justify-between gap-2">
-                      <span className="text-sm font-semibold leading-tight text-foreground">{label}</span>
-                      <ArrowRight className="size-4 shrink-0 text-secondary transition-transform group-hover:translate-x-0.5" />
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+          {countries.map((country) => (
+            <Link
+              key={country.code}
+              to="/opportunities"
+              search={{ location: country.query }}
+              className="group flex min-h-28 flex-col justify-between rounded-lg border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-secondary hover:shadow-card"
+            >
+              <span className="flex size-11 items-center justify-center overflow-hidden rounded-full bg-primary/10" aria-hidden="true">
+                <img
+                  src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                  alt=""
+                  width={40}
+                  height={28}
+                  loading="lazy"
+                  className="h-7 w-10 object-cover"
+                />
+              </span>
+              <span className="mt-4 flex items-end justify-between gap-2">
+                <span className="text-sm font-semibold leading-tight text-foreground">{country.label}</span>
+                <ArrowRight className="size-4 shrink-0 text-secondary transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </Link>
           ))}
-        </div></div>
+        </div>
+        </div>
       </section>
 
       <section className="bg-navy py-20 text-navy-foreground sm:py-24">
