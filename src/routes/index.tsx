@@ -54,29 +54,54 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const countries = [
-  { label: "Australia", query: "Australia", code: "AU", flag: "🇦🇺" },
-  { label: "Bahrain", query: "Bahrain", code: "BH", flag: "🇧🇭" },
-  { label: "Canada", query: "Canada", code: "CA", flag: "🇨🇦" },
-  { label: "France", query: "France", code: "FR", flag: "🇫🇷" },
-  { label: "Germany", query: "Germany", code: "DE", flag: "🇩🇪" },
-  { label: "Ireland", query: "Ireland", code: "IE", flag: "🇮🇪" },
-  { label: "Kuwait", query: "Kuwait", code: "KW", flag: "🇰🇼" },
-  { label: "Luxembourg", query: "Luxembourg", code: "LU", flag: "🇱🇺" },
-  { label: "Malaysia", query: "Malaysia", code: "MY", flag: "🇲🇾" },
-  { label: "Malta", query: "Malta", code: "MT", flag: "🇲🇹" },
-  { label: "Mauritius", query: "Mauritius", code: "MU", flag: "🇲🇺" },
-  { label: "Netherlands", query: "Netherlands", code: "NL", flag: "🇳🇱" },
-  { label: "New Zealand", query: "New Zealand", code: "NZ", flag: "🇳🇿" },
-  { label: "Oman", query: "Oman", code: "OM", flag: "🇴🇲" },
-  { label: "Poland", query: "Poland", code: "PL", flag: "🇵🇱" },
-  { label: "Qatar", query: "Qatar", code: "QA", flag: "🇶🇦" },
-  { label: "Saudi Arabia", query: "Saudi Arabia", code: "SA", flag: "🇸🇦" },
-  { label: "Switzerland", query: "Switzerland", code: "CH", flag: "🇨🇭" },
-  { label: "Turkey", query: "Turkey", code: "TR", flag: "🇹🇷" },
-  { label: "UAE / Dubai", query: "Dubai", code: "AE", flag: "🇦🇪" },
-  { label: "United Kingdom", query: "United Kingdom", code: "GB", flag: "🇬🇧" },
+const countryRegions = [
+  {
+    name: "Africa",
+    countries: [
+      ["Algeria","DZ"],["Angola","AO"],["Benin","BJ"],["Botswana","BW"],["Burkina Faso","BF"],["Burundi","BI"],["Cabo Verde","CV"],["Cameroon","CM"],["Central African Republic","CF"],["Chad","TD"],["Comoros","KM"],["Democratic Republic of the Congo","CD"],["Republic of the Congo","CG"],["Côte d'Ivoire","CI"],["Djibouti","DJ"],["Egypt","EG"],["Equatorial Guinea","GQ"],["Eritrea","ER"],["Eswatini","SZ"],["Ethiopia","ET"],["Gabon","GA"],["Gambia","GM"],["Ghana","GH"],["Guinea","GN"],["Guinea-Bissau","GW"],["Kenya","KE"],["Lesotho","LS"],["Liberia","LR"],["Libya","LY"],["Madagascar","MG"],["Malawi","MW"],["Mali","ML"],["Mauritania","MR"],["Mauritius","MU"],["Morocco","MA"],["Mozambique","MZ"],["Namibia","NA"],["Niger","NE"],["Nigeria","NG"],["Rwanda","RW"],["São Tomé and Príncipe","ST"],["Senegal","SN"],["Seychelles","SC"],["Sierra Leone","SL"],["Somalia","SO"],["South Africa","ZA"],["South Sudan","SS"],["Sudan","SD"],["Tanzania","TZ"],["Togo","TG"],["Tunisia","TN"],["Uganda","UG"],["Zambia","ZM"],["Zimbabwe","ZW"]
+    ]
+  },
+  {
+    name: "Asia",
+    countries: [
+      ["Afghanistan","AF"],["Armenia","AM"],["Azerbaijan","AZ"],["Bangladesh","BD"],["Bhutan","BT"],["Brunei","BN"],["Cambodia","KH"],["China","CN"],["Cyprus","CY"],["Georgia","GE"],["India","IN"],["Indonesia","ID"],["Iran","IR"],["Iraq","IQ"],["Israel","IL"],["Japan","JP"],["Jordan","JO"],["Kazakhstan","KZ"],["Kyrgyzstan","KG"],["Laos","LA"],["Lebanon","LB"],["Malaysia","MY"],["Maldives","MV"],["Mongolia","MN"],["Myanmar","MM"],["Nepal","NP"],["North Korea","KP"],["Oman","OM"],["Pakistan","PK"],["Palestine","PS"],["Philippines","PH"],["Saudi Arabia","SA"],["Singapore","SG"],["South Korea","KR"],["Sri Lanka","LK"],["Syria","SY"],["Tajikistan","TJ"],["Thailand","TH"],["Timor-Leste","TL"],["Turkey","TR"],["Turkmenistan","TM"],["United Arab Emirates","AE"],["Uzbekistan","UZ"],["Vietnam","VN"],["Yemen","YE"]
+    ]
+  },
+  {
+    name: "Gulf Cooperation Council (GCC)",
+    countries: [
+      ["Bahrain","BH"],["Kuwait","KW"],["Oman","OM"],["Qatar","QA"],["Saudi Arabia","SA"],["United Arab Emirates","AE"]
+    ]
+  },
+  {
+    name: "Europe",
+    countries: [
+      ["Albania","AL"],["Andorra","AD"],["Austria","AT"],["Belarus","BY"],["Belgium","BE"],["Bosnia and Herzegovina","BA"],["Bulgaria","BG"],["Croatia","HR"],["Czechia","CZ"],["Denmark","DK"],["Estonia","EE"],["Finland","FI"],["France","FR"],["Germany","DE"],["Greece","GR"],["Hungary","HU"],["Iceland","IS"],["Ireland","IE"],["Italy","IT"],["Latvia","LV"],["Liechtenstein","LI"],["Lithuania","LT"],["Luxembourg","LU"],["Malta","MT"],["Moldova","MD"],["Monaco","MC"],["Montenegro","ME"],["Netherlands","NL"],["North Macedonia","MK"],["Norway","NO"],["Poland","PL"],["Portugal","PT"],["Romania","RO"],["Russia","RU"],["San Marino","SM"],["Serbia","RS"],["Slovakia","SK"],["Slovenia","SI"],["Spain","ES"],["Sweden","SE"],["Switzerland","CH"],["Ukraine","UA"],["United Kingdom","GB"],["Vatican City","VA"]
+    ]
+  },
+  {
+    name: "North America",
+    countries: [
+      ["Antigua and Barbuda","AG"],["Bahamas","BS"],["Barbados","BB"],["Belize","BZ"],["Canada","CA"],["Costa Rica","CR"],["Cuba","CU"],["Dominica","DM"],["Dominican Republic","DO"],["El Salvador","SV"],["Grenada","GD"],["Guatemala","GT"],["Haiti","HT"],["Honduras","HN"],["Jamaica","JM"],["Mexico","MX"],["Nicaragua","NI"],["Panama","PA"],["Saint Kitts and Nevis","KN"],["Saint Lucia","LC"],["Saint Vincent and the Grenadines","VC"],["Trinidad and Tobago","TT"],["United States","US"]
+    ]
+  },
+  {
+    name: "South America",
+    countries: [
+      ["Argentina","AR"],["Bolivia","BO"],["Brazil","BR"],["Chile","CL"],["Colombia","CO"],["Ecuador","EC"],["Guyana","GY"],["Paraguay","PY"],["Peru","PE"],["Suriname","SR"],["Uruguay","UY"],["Venezuela","VE"]
+    ]
+  },
+  {
+    name: "Oceania",
+    countries: [
+      ["Australia","AU"],["Fiji","FJ"],["Kiribati","KI"],["Marshall Islands","MH"],["Micronesia","FM"],["Nauru","NR"],["New Zealand","NZ"],["Palau","PW"],["Papua New Guinea","PG"],["Samoa","WS"],["Solomon Islands","SB"],["Tonga","TO"],["Tuvalu","TV"],["Vanuatu","VU"]
+    ]
+  }
 ] as const;
+
+const countries = countryRegions.flatMap((region) =>
+  region.countries.map(([label, code]) => ({ label, query: label, code })),
+);
 
 type HomeJob = OpportunityRow & {
   description?: string | null;
@@ -275,31 +300,40 @@ function Home() {
           title="Explore Opportunities by Country"
           description="Choose a destination to see matching opportunities already available in our listings."
         />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
-          {countries.map((country) => (
-            <Link
-              key={country.code}
-              to="/opportunities"
-              search={{ location: country.query }}
-              className="group flex min-h-28 flex-col justify-between rounded-lg border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-secondary hover:shadow-card"
-            >
-              <span className="flex size-11 items-center justify-center overflow-hidden rounded-full bg-primary/10" aria-hidden="true">
-                <img
-                  src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
-                  alt=""
-                  width={40}
-                  height={28}
-                  loading="lazy"
-                  className="h-7 w-10 object-cover"
-                />
-              </span>
-              <span className="mt-4 flex items-end justify-between gap-2">
-                <span className="text-sm font-semibold leading-tight text-foreground">{country.label}</span>
-                <ArrowRight className="size-4 shrink-0 text-secondary transition-transform group-hover:translate-x-0.5" />
-              </span>
-            </Link>
+        <div className="space-y-10">
+          {countryRegions.map((region) => (
+            <div key={region.name}>
+              <h3 className="mb-4 font-display text-lg font-bold uppercase tracking-normal text-foreground">
+                {region.name}
+              </h3>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+                {region.countries.map(([label, code]) => (
+                  <Link
+                    key={code}
+                    to="/opportunities"
+                    search={{ location: label }}
+                    className="group flex min-h-28 flex-col justify-between rounded-lg border border-border bg-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-secondary hover:shadow-card"
+                  >
+                    <span className="flex size-11 items-center justify-center overflow-hidden rounded-full bg-primary/10" aria-hidden="true">
+                      <img
+                        src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
+                        alt=""
+                        width={40}
+                        height={28}
+                        loading="lazy"
+                        className="h-7 w-10 object-cover"
+                      />
+                    </span>
+                    <span className="mt-4 flex items-end justify-between gap-2">
+                      <span className="text-sm font-semibold leading-tight text-foreground">{label}</span>
+                      <ArrowRight className="size-4 shrink-0 text-secondary transition-transform group-hover:translate-x-0.5" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
-        </div>
+        </div></div>
       </section>
 
       <section className="bg-navy py-20 text-navy-foreground sm:py-24">
