@@ -41,7 +41,7 @@ export function OpportunityCard({ job }: { job: OpportunityRow }) {
     Date.now() - new Date(job.published_at ?? job.created_at!).getTime() < 1000 * 60 * 60 * 24 * 14;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
+    <article className="group flex flex-col overflow-hidden rounded-xl border border-border/80 bg-gradient-to-br from-card via-surface to-card shadow-card ring-1 ring-primary/5 transition-all duration-300 hover:-translate-y-1 hover:border-secondary/50 hover:shadow-lift hover:ring-secondary/10">
       <div className="relative aspect-[16/10] overflow-hidden bg-muted">
         <img
           src={image}
